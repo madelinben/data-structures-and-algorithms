@@ -1,6 +1,3 @@
-//! Heap Sort Algorithm - Basic Implementation
-//! More comprehensive implementation coming soon
-
 use super::PerformanceCounter;
 
 pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
@@ -9,12 +6,10 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
         return;
     }
     
-    // Build max heap
     for i in (0..n / 2).rev() {
         heapify(arr, n, i, counter);
     }
     
-    // Extract elements from heap one by one
     for i in (1..n).rev() {
         counter.swap(arr, 0, i);
         heapify(arr, i, 0, counter);

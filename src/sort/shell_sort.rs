@@ -1,4 +1,3 @@
-//! Shell Sort Algorithm - Basic Implementation
 use super::PerformanceCounter;
 
 pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {

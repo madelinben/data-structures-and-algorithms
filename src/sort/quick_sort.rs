@@ -1,6 +1,3 @@
-//! Quick Sort Algorithm - Basic Implementation
-//! More comprehensive implementation coming soon
-
 use super::PerformanceCounter;
 
 pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {

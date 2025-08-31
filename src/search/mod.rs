@@ -1,8 +1,3 @@
-//! Search Algorithms Module
-//! 
-//! This module provides various search algorithm implementations with performance analysis.
-//! It loads word lists, shuffles them, and allows benchmarking different search strategies.
-
 pub mod linear_search;
 pub mod binary_search;
 pub mod hash_search;
@@ -17,7 +12,6 @@ use rand::prelude::*;
 use rand::rng;
 use prettytable::{Table, Row, Cell};
 
-/// Performance metrics for search algorithms
 #[derive(Debug, Clone)]
 pub struct SearchMetrics {
     pub algorithm_name: String,
@@ -28,20 +22,14 @@ pub struct SearchMetrics {
     pub actual_complexity: f64,
 }
 
-/// Main search algorithm coordinator
 pub struct SearchCoordinator {
-    /// Original word list
     words: Vec<String>,
-    /// Shuffled word list for linear searches
     shuffled_words: Vec<String>,
-    /// Sorted word list for binary searches
     sorted_words: Vec<String>,
-    /// Hash map for O(1) lookups
     word_map: HashMap<String, usize>,
 }
 
 impl SearchCoordinator {
-    /// Create a new search coordinator
     pub fn new() -> Self {
         Self {
             words: Vec::new(),
@@ -51,13 +39,11 @@ impl SearchCoordinator {
         }
     }
 
-    /// Load words from file and prepare data structures
     pub async fn load_words(&mut self, file_path: &str) -> Result<()> {
         println!("Loading words from: {}", file_path);
         let content = tokio::fs::read_to_string(file_path).await
             .map_err(|e| Error::Generic(format!("Failed to read file {}: {}", file_path, e)))?;
 
-        // Parse words from file
         self.words = content
             .lines()
             .map(|line| line.trim().to_lowercase())
@@ -68,16 +54,13 @@ impl SearchCoordinator {
             return Err(Error::Generic("No valid words found in file".to_string()));
         }
 
-        // Create shuffled version
         self.shuffled_words = self.words.clone();
         let mut rng = rng();
         self.shuffled_words.shuffle(&mut rng);
 
-        // Create sorted version  
         self.sorted_words = self.words.clone();
         self.sorted_words.sort_unstable();
 
-        // Create hash map
         self.word_map = self.words
             .iter()
             .enumerate()
@@ -92,7 +75,6 @@ impl SearchCoordinator {
         Ok(())
     }
 
-    /// Run comprehensive search benchmarks
     pub fn run_benchmarks(&self, target_word: &str, iterations: usize) -> Result<Vec<SearchMetrics>> {
         if self.words.is_empty() {
             return Err(Error::Generic("No words loaded. Load words first.".to_string()));
@@ -104,29 +86,17 @@ impl SearchCoordinator {
 
         let mut results = Vec::new();
 
-        // Linear Search (on shuffled array)
         results.push(self.benchmark_linear_search(target_word, iterations)?);
-
-        // Binary Search (on sorted array)
         results.push(self.benchmark_binary_search(target_word, iterations)?);
-
-        // Hash Search (using HashMap)
         results.push(self.benchmark_hash_search(target_word, iterations)?);
-
-        // Interpolation Search (on sorted array)
         results.push(self.benchmark_interpolation_search(target_word, iterations)?);
-
-        // Jump Search (on sorted array)
         results.push(self.benchmark_jump_search(target_word, iterations)?);
-
-        // Exponential Search (on sorted array)
         results.push(self.benchmark_exponential_search(target_word, iterations)?);
 
         self.display_results(&results);
         Ok(results)
     }
 
-    /// Benchmark linear search
     fn benchmark_linear_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut total_comparisons = 0;
         let mut found_count = 0;
@@ -154,7 +124,6 @@ impl SearchCoordinator {
         })
     }
 
-    /// Benchmark binary search
     fn benchmark_binary_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut total_comparisons = 0;
         let mut found_count = 0;
@@ -182,7 +151,6 @@ impl SearchCoordinator {
         })
     }
 
-    /// Benchmark hash search
     fn benchmark_hash_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut found_count = 0;
         
@@ -200,14 +168,13 @@ impl SearchCoordinator {
         Ok(SearchMetrics {
             algorithm_name: "Hash Search".to_string(),
             target_found: found_count > 0,
-            comparisons: 1, // Hash lookup is essentially O(1)
+            comparisons: 1,
             duration,
             theoretical_complexity: "O(1)".to_string(),
             actual_complexity: 1.0,
         })
     }
 
-    /// Benchmark interpolation search
     fn benchmark_interpolation_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut total_comparisons = 0;
         let mut found_count = 0;
@@ -235,7 +202,6 @@ impl SearchCoordinator {
         })
     }
 
-    /// Benchmark jump search
     fn benchmark_jump_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut total_comparisons = 0;
         let mut found_count = 0;
@@ -263,7 +229,6 @@ impl SearchCoordinator {
         })
     }
 
-    /// Benchmark exponential search
     fn benchmark_exponential_search(&self, target: &str, iterations: usize) -> Result<SearchMetrics> {
         let mut total_comparisons = 0;
         let mut found_count = 0;
@@ -291,7 +256,6 @@ impl SearchCoordinator {
         })
     }
 
-    /// Display benchmark results in a formatted table
     fn display_results(&self, results: &[SearchMetrics]) {
         let mut table = Table::new();
         
@@ -327,7 +291,6 @@ impl SearchCoordinator {
 
         println!("\n{}", table);
 
-        // Summary statistics
         if let Some(fastest) = results.iter().min_by_key(|m| m.duration) {
             println!("🏆 Fastest Algorithm: {} ({:.2}μs)", 
                 fastest.algorithm_name, fastest.duration.as_micros());
@@ -339,11 +302,9 @@ impl SearchCoordinator {
         }
     }
 
-    /// Analyze search performance on a specific word pattern type
     pub fn analyze_array_type(&self, pattern_type: &str, size: usize) -> Result<()> {
         println!("\nAnalyzing search performance on {} pattern (size: {})", pattern_type, size);
         
-        // For search algorithms, we can analyze different word patterns
         let test_words = match pattern_type.to_lowercase().as_str() {
             "short" => self.words.iter().filter(|w| w.len() <= 5).take(size).cloned().collect::<Vec<_>>(),
             "long" => self.words.iter().filter(|w| w.len() > 10).take(size).cloned().collect::<Vec<_>>(),
@@ -363,11 +324,9 @@ impl SearchCoordinator {
             return Err(Error::Generic("No words available for analysis. Load words first.".to_string()));
         }
 
-        // Pick a target word from the test set
         let target_word = &test_words[test_words.len() / 2];
         println!("Target word: '{}'", target_word);
         
-        // Create temporary coordinator with test data
         let mut temp_coord = SearchCoordinator::new();
         temp_coord.words = test_words.clone();
         temp_coord.shuffled_words = test_words.clone();
@@ -376,13 +335,11 @@ impl SearchCoordinator {
         temp_coord.sorted_words.sort_unstable();
         temp_coord.word_map = test_words.iter().enumerate().map(|(i, w)| (w.clone(), i)).collect();
 
-        // Run benchmarks
         temp_coord.run_benchmarks(target_word, 50)?;
         
         Ok(())
     }
 
-    /// Get statistics about loaded data
     pub fn get_stats(&self) -> String {
         format!(
             "Dataset Statistics:\n  Words loaded: {}\n  Shuffled array size: {}\n  Sorted array size: {}\n  Hash map size: {}",

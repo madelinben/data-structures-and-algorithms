@@ -1,4 +1,3 @@
-//! Counting Sort Algorithm - Basic Implementation
 use super::PerformanceCounter;
 
 pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
@@ -13,13 +12,11 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
     let mut count = vec![0; range];
     counter.allocate_memory(range);
     
-    // Count each element
     for &value in arr.iter() {
         count[(value - min_val) as usize] += 1;
         counter.comparisons += 1;
     }
     
-    // Reconstruct sorted array
     let mut index = 0;
     for (i, &freq) in count.iter().enumerate() {
         for _ in 0..freq {

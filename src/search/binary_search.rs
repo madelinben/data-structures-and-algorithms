@@ -1,11 +1,3 @@
-//! Binary Search Algorithm
-//! 
-//! Searches a sorted list by repeatedly dividing the search interval in half.
-//! Time Complexity: O(log n)
-//! Space Complexity: O(1)
-
-/// Perform binary search on a sorted slice of strings
-/// Returns (found, comparisons_made)
 pub fn search(data: &[String], target: &str) -> (bool, usize) {
     let mut left = 0;
     let mut right = data.len();
@@ -25,7 +17,6 @@ pub fn search(data: &[String], target: &str) -> (bool, usize) {
     (false, comparisons)
 }
 
-/// Recursive binary search implementation
 pub fn search_recursive(data: &[String], target: &str) -> (bool, usize) {
     fn binary_search_recursive(data: &[String], target: &str, left: usize, right: usize, comparisons: &mut usize) -> bool {
         if left >= right {
@@ -47,7 +38,6 @@ pub fn search_recursive(data: &[String], target: &str) -> (bool, usize) {
     (found, comparisons)
 }
 
-/// Binary search that returns the insertion point if not found
 pub fn search_with_insertion_point(data: &[String], target: &str) -> (Option<usize>, usize, usize) {
     let mut left = 0;
     let mut right = data.len();
@@ -64,7 +54,5 @@ pub fn search_with_insertion_point(data: &[String], target: &str) -> (Option<usi
         }
     }
     
-    (None, comparisons, left) // left is the insertion point
+    (None, comparisons, left)
 }
-
-
