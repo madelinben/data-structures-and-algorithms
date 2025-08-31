@@ -99,7 +99,7 @@ pub fn merge_sort_iterative(arr: &mut [i32], counter: &mut PerformanceCounter) {
     }
 }
 
-pub fn merge_sort_optimized(arr: &mut [i32], counter: &mut PerformanceCounter) {
+pub fn merge_sort_optimised(arr: &mut [i32], counter: &mut PerformanceCounter) {
     const INSERTION_SORT_THRESHOLD: usize = 16;
     
     let n = arr.len();
@@ -115,10 +115,10 @@ pub fn merge_sort_optimized(arr: &mut [i32], counter: &mut PerformanceCounter) {
     let mut aux = vec![0; n];
     counter.allocate_memory(n);
     
-    merge_sort_optimized_recursive(arr, &mut aux, 0, n, counter);
+    merge_sort_optimised_recursive(arr, &mut aux, 0, n, counter);
 }
 
-fn merge_sort_optimized_recursive(
+fn merge_sort_optimised_recursive(
     arr: &mut [i32], 
     aux: &mut [i32], 
     left: usize, 
@@ -134,8 +134,8 @@ fn merge_sort_optimized_recursive(
     
     let mid = left + (right - left) / 2;
     
-    merge_sort_optimized_recursive(arr, aux, left, mid, counter);
-    merge_sort_optimized_recursive(arr, aux, mid, right, counter);
+    merge_sort_optimised_recursive(arr, aux, left, mid, counter);
+    merge_sort_optimised_recursive(arr, aux, mid, right, counter);
     
     if counter.compare(&arr[mid - 1], &arr[mid]) != std::cmp::Ordering::Greater {
         return;

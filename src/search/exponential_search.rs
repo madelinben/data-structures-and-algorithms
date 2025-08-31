@@ -69,7 +69,7 @@ pub fn search_with_growth_factor(data: &[String], target: &str, growth_factor: u
     (found, comparisons + binary_comparisons)
 }
 
-pub fn search_optimized(data: &[String], target: &str) -> (bool, usize) {
+pub fn search_optimised(data: &[String], target: &str) -> (bool, usize) {
     if data.is_empty() {
         return (false, 0);
     }

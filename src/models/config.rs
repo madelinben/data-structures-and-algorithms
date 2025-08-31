@@ -35,9 +35,31 @@ impl Default for SortConfig {
 }
 
 #[derive(Debug, Clone)]
+pub struct PathfinderConfig {
+    pub grid_width: usize,
+    pub grid_height: usize,
+    pub obstacle_percentage: f64,
+    pub iterations: usize,
+    pub gui_enabled: bool,
+}
+
+impl Default for PathfinderConfig {
+    fn default() -> Self {
+        Self {
+            grid_width: 20,
+            grid_height: 20,
+            obstacle_percentage: 0.3,
+            iterations: 10,
+            gui_enabled: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct AppConfig {
     pub search: SearchConfig,
     pub sort: SortConfig,
+    pub pathfinder: PathfinderConfig,
 }
 
 impl Default for AppConfig {
@@ -45,6 +67,7 @@ impl Default for AppConfig {
         Self {
             search: SearchConfig::default(),
             sort: SortConfig::default(),
+            pathfinder: PathfinderConfig::default(),
         }
     }
 }

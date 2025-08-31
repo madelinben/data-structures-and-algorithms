@@ -20,7 +20,7 @@ cargo run -- search <algorithm> --target <word>
 # Run search benchmark comparison
 cargo run -- search benchmark --target <word>
 
-# Generate algorithm visualizations (requires --features gui)
+# Generate algorithm visualisations (requires --features gui)
 cargo run --features gui -- visualize <algorithm> --size <n>
 cargo run --features gui -- visualize all --size <n>
 ```

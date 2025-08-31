@@ -1,10 +1,10 @@
 # Rust Programming Rules & Best Practices
 
-This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, and algorithm visualization implementation.
+This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, and algorithm visualisation implementation.
 
-## Project Structure & Organization
+## Project Structure & Organisation
 
-### Module Organization
+### Module Organisation
 - Use `mod.rs` files for module declarations
 - Keep modules focused on single responsibilities
 - Organize related functionality into logical modules
@@ -29,10 +29,11 @@ src/
 │   ├── mod.rs           # Module exports
 │   ├── app_controller.rs # Main application controller
 │   ├── search_controller.rs # Search algorithm coordination
-│   └── sort_controller.rs # Sort algorithm coordination
-├── gui/                 # GUI visualization functionality
+│   ├── sort_controller.rs # Sort algorithm coordination
+│   └── pathfinder_controller.rs # Pathfinder algorithm coordination
+├── gui/                 # GUI visualisation functionality
 │   ├── mod.rs           # Module exports
-│   ├── sorting.rs       # Core sorting visualization logic
+│   ├── sorting.rs       # Core sorting visualisation logic
 │   ├── visualisation.rs # GUI algorithm runners
 │   └── renderer.rs      # Frame and GIF rendering
 ├── search/              # Search algorithm implementations
@@ -41,20 +42,24 @@ src/
 ├── sort/                # Sort algorithm implementations
 │   ├── mod.rs           # Sort coordinator and benchmarking
 │   └── *.rs             # Individual sort algorithms
+├── pathfinder/          # Pathfinding algorithm implementations
+│   ├── mod.rs           # Pathfinder coordinator and benchmarking
+│   └── *.rs             # Individual pathfinding algorithms
 └── utils/               # Utility functions
     └── mod.rs
 ```
 
 ### Algorithm Module Structure
-Algorithm implementations are organized in dedicated modules:
+Algorithm implementations are organised in dedicated modules:
 - `sort/` - Contains 13 sorting algorithms (bubble, insertion, selection, merge, quick, heap, shell, tim, tree, bucket, radix, counting, cube)
 - `search/` - Contains 6 search algorithms (linear, binary, hash, interpolation, jump, exponential)
+- `pathfinder/` - Contains 5 pathfinding algorithms (A*, Dijkstra, breadth-first, depth-first, greedy best-first)
 - Each algorithm module includes performance tracking and proper error handling
 
 ## MVC Architecture
 
 ### Model-View-Controller Pattern
-This project follows a clean MVC architecture for better organization and maintainability:
+This project follows a clean MVC architecture for better organisation and maintainability:
 
 #### Models (`src/models/`)
 - **Purpose**: Data structures, configuration, and business entities
@@ -86,17 +91,17 @@ This project follows a clean MVC architecture for better organization and mainta
 - Use descriptive names that clearly indicate purpose
 
 ### Language & Spelling Standards
-- **Use American English (US) spelling** throughout the codebase for consistency with Rust ecosystem
-- Apply US spelling to variable names, function names, file names, comments, and documentation
+- **Use English (GB) spelling** throughout the codebase for consistency with Rust ecosystem
+- Apply GB spelling to variable names, function names, file names, comments, and documentation
 - Common examples:
-  - `visualization` not `visualisation`
-  - `analyze` not `analyse` 
-  - `color` not `colour`
-  - `optimization` not `optimisation`
-  - `initialize` not `initialise`
-  - `realize` not `realise`
-  - `organize` not `organise`
-  - `centralize` not `centralise`
+  - `visualisation` not `visualization`
+  - `analyse` not `analyze` 
+  - `colour` not `color`
+  - `optimisation` not `optimization`
+  - `initialise` not `initialize`
+  - `realise` not `realize`
+  - `organise` not `organize`
+  - `centralise` not `centralize`
 
 ### Error Handling
 - Use `Result<T, E>` for fallible operations
@@ -139,8 +144,10 @@ Error::generic("Unexpected algorithm failure")
 ### For Algorithm Implementation
 - Use `Vec<i32>` for sorting algorithm inputs for consistency
 - Use `Vec<String>` for search algorithm inputs
+- Use `Grid` with `Vec<Vec<CellType>>` for pathfinding algorithm inputs
 - Use `HashMap<String, usize>` for hash-based search implementations
-- Use `VecDeque<SortStep>` for visualization step recording
+- Use `VecDeque<SortStep>` for visualisation step recording
+- Use `Vec<Position>` for pathfinding results and path representation
 - Consider using `BTreeMap` when deterministic ordering is needed for reproducible results
 
 ### Memory Efficiency
@@ -164,11 +171,19 @@ Error::generic("Unexpected algorithm failure")
 - Implement proper bounds checking and edge case handling
 - Use appropriate data structures for each algorithm type (arrays, hash maps)
 
+### Pathfinding Algorithm Principles
+- Use `Grid` structure with `Position` coordinates for consistent spatial representation
+- Return both path result and performance metrics (nodes explored, comparisons, duration)
+- Handle edge cases (no path exists, start equals end, invalid positions)
+- Use `PerformanceCounter` for consistent metrics tracking (nodes explored, frontier size, comparisons)
+- Implement proper neighbor validation (bounds checking, obstacle avoidance)
+- Support different heuristics (Manhattan distance, Euclidean distance)
+
 ### Visualization Integration
-- Use `GuiPerformanceCounter` for recording visualization steps
+- Use `GuiPerformanceCounter` for recording visualisation steps
 - Implement context ranges for recursive algorithms (purple highlighting)
 - Record comparisons (red highlighting) and swaps (green highlighting) appropriately
-- Ensure consistent color scheme across all algorithm visualizations
+- Ensure consistent colour scheme across all algorithm visualisations
 
 
 
@@ -184,7 +199,7 @@ Error::generic("Unexpected algorithm failure")
 - Maintain clear project documentation
 - Include build and run instructions
 - Document algorithm time and space complexities
-- Include performance benchmark results and visualization features
+- Include performance benchmark results and visualisation features
 
 ## Dependencies
 
@@ -198,7 +213,7 @@ Error::generic("Unexpected algorithm failure")
 - `rayon` - Parallel processing
 
 ### GUI Dependencies (Feature-gated)
-- `gif` - GIF generation for algorithm visualization (optional)
+- `gif` - GIF generation for algorithm visualisation (optional)
 
 ### Development Dependencies
 - `criterion` - Benchmarking
@@ -208,10 +223,10 @@ Error::generic("Unexpected algorithm failure")
 ## GUI Architecture
 
 ### Centralized GUI Module (`src/gui/`)
-All GUI and visualization functionality is centralized in the `gui` module:
+All GUI and visualisation functionality is centralized in the `gui` module:
 
 #### GUI Components
-- **sorting.rs**: Core sorting visualization logic, step recording, and GIF generation
+- **sorting.rs**: Core sorting visualisation logic, step recording, and GIF generation
 - **visualisation.rs**: Algorithm-specific GUI runners and entry points  
 - **renderer.rs**: Frame rendering utilities and static image generation
 
@@ -219,8 +234,10 @@ All GUI and visualization functionality is centralized in the `gui` module:
 - **Feature-gated**: All GUI code behind `#[cfg(feature = "gui")]`
 - **Modular**: Separate concerns (step recording, frame rendering, algorithm coordination)
 - **Performance**: Efficient frame generation with consistent scaling and memory usage
-- **User-friendly**: Clear progress indication, error handling, and color-coded visualization
-- **Consistent**: Standardized color scheme (purple=context, red=comparison, green=swap, blue=default)
+- **User-friendly**: Clear progress indication, error handling, and colour-coded visualisation
+- **Consistent**: Standardized colour scheme
+  - **Sorting**: purple=context, red=comparison, green=swap, blue=default
+  - **Pathfinding**: blue=open, black=blocked, purple=context, red=comparison, green=path
 
 ### GUI Integration
 - Controllers coordinate between CLI/interactive modes and GUI
@@ -245,7 +262,7 @@ All GUI and visualization functionality is centralized in the `gui` module:
 
 ### Commit Messages
 - Use conventional commit format
-- Include scope: `feat(sort): add heap sort implementation` or `fix(gui): correct color scheme in visualization`
+- Include scope: `feat(sort): add heap sort implementation` or `fix(gui): correct colour scheme in visualisation`
 - Keep commits focused and atomic
 
 ### Branching Strategy
@@ -270,7 +287,7 @@ codegen-units = 1
 panic = "abort"
 ```
 
-This ensures optimal performance for sorting algorithms, search algorithms, and visualization rendering.
+This ensures optimal performance for sorting algorithms, search algorithms, and visualisation rendering.
 
 ## MVC Implementation Guidelines
 
@@ -295,13 +312,60 @@ This ensures optimal performance for sorting algorithms, search algorithms, and 
 ### Algorithm Implementation Guidelines
 - **Sorting Algorithms**: Implement using consistent `PerformanceCounter` interface
 - **Search Algorithms**: Return tuple of (found: bool, comparisons: usize) 
-- **Performance Tracking**: Count comparisons, swaps, and memory allocations accurately
-- **Edge Cases**: Handle empty inputs, single elements, and duplicate values properly
+- **Pathfinding Algorithms**: Return tuple of (path: Vec<Position>, counter: PerformanceCounter)
+- **Performance Tracking**: Count comparisons, swaps, memory allocations, nodes explored accurately
+- **Edge Cases**: Handle empty inputs, single elements, duplicate values, and unreachable goals properly
 - **Visualization**: Use `GuiPerformanceCounter` for step recording in GUI wrapper functions
+- **Grid Operations**: Validate positions, handle obstacles, implement proper neighbor checking
+
+### User Input Standards
+All algorithm selection inputs throughout the application follow a consistent, simplified structure:
+
+#### Input Format Rules
+- **Numbers**: Accept numeric choices (1, 2, 3, etc.) for quick selection
+- **Simple Names**: Accept basic algorithm names without variations (e.g., "bubble", "merge", "quick")
+- **All Option**: Accept "a", "A", or "all" for running all algorithms
+- **Case Insensitive**: All text inputs are converted to lowercase for matching
+
+#### Sorting Algorithm Input
+- **Numbers**: 1-13 corresponding to the algorithm list
+- **Names**: `bubble`, `insertion`, `selection`, `merge`, `quick`, `heap`, `shell`, `tim`, `tree`, `bucket`, `radix`, `counting`, `cube`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to sort menu)
+
+#### Search Algorithm Input  
+- **Numbers**: 1-6 corresponding to the algorithm list
+- **Names**: `linear`, `binary`, `hash`, `interpolation`, `exponential`, `jump`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to search menu)
+
+#### Pathfinding Algorithm Input
+- **Numbers**: 1-5 corresponding to the algorithm list  
+- **Names**: `astar`, `dijkstra`, `bfs`, `dfs`, `greedy`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to pathfinder menu)
+
+#### Rejected Input Variations
+Do not accept complex variations or shortcuts:
+- No hyphenated versions: ~~`bubble-sort`~~, ~~`merge-sort`~~
+- No compound versions: ~~`bubblesort`~~, ~~`mergesort`~~  
+- No abbreviations: ~~`qsort`~~, ~~`msort`~~, ~~`bst`~~
+- No full descriptions: ~~`bubble sort`~~, ~~`quick sort`~~
+
+#### Input Validation
+- Use `SortAlgorithm::from_str()`, `SearchAlgorithm::from_str()`, `PathfinderAlgorithm::from_str()` for parsing
+- Provide clear error messages with examples of valid input
+- Show helpful hints about accepted input formats
+
+#### CLI Integration
+- Interactive mode algorithm selection follows the same input rules
+- CLI subcommands use structured arguments (no algorithm selection by name in CLI)
+- All interactive prompts maintain consistent input validation
+- Error messages provide context-specific examples
 
 ### GUI Integration Guidelines
 - Feature-gate all GUI dependencies behind `#[cfg(feature = "gui")]`
 - Provide fallbacks for non-GUI builds
 - Separate rendering logic from core algorithm logic
-- Efficient memory usage for visualization with large datasets
-- Implement consistent color coding across all algorithm visualizations
+- Efficient memory usage for visualisation with large datasets
+- Implement consistent colour coding across all algorithm visualisations
