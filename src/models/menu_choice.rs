@@ -44,7 +44,7 @@ pub enum SortAlgorithm {
 
 impl SortAlgorithm {
     pub fn from_str(s: &str) -> Option<Self> {
-        match s {
+        match s.to_lowercase().as_str() {
             "1" | "bubble" => Some(Self::Bubble),
             "2" | "insertion" => Some(Self::Insertion),
             "3" | "selection" => Some(Self::Selection),
@@ -81,13 +81,82 @@ impl SortAlgorithm {
             Self::All => "all",
         }
     }
+    
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            Self::Bubble => "Bubble Sort",
+            Self::Insertion => "Insertion Sort", 
+            Self::Selection => "Selection Sort",
+            Self::Merge => "Merge Sort",
+            Self::Quick => "Quick Sort",
+            Self::Heap => "Heap Sort",
+            Self::Shell => "Shell Sort",
+            Self::Tim => "Tim Sort",
+            Self::Tree => "Tree Sort",
+            Self::Bucket => "Bucket Sort",
+            Self::Radix => "Radix Sort",
+            Self::Counting => "Counting Sort",
+            Self::Cube => "Cube Sort",
+            Self::All => "All Algorithms",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SearchAlgorithm {
+    Linear,
+    Binary,
+    Hash,
+    Interpolation,
+    Exponential,
+    Jump,
+    All,
+}
+
+impl SearchAlgorithm {
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s.to_lowercase().as_str() {
+            "1" | "linear" => Some(Self::Linear),
+            "2" | "binary" => Some(Self::Binary),
+            "3" | "hash" => Some(Self::Hash),
+            "4" | "interpolation" => Some(Self::Interpolation),
+            "5" | "exponential" => Some(Self::Exponential),
+            "6" | "jump" => Some(Self::Jump),
+            "a" | "all" => Some(Self::All),
+            _ => None,
+        }
+    }
+    
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Linear => "linear",
+            Self::Binary => "binary",
+            Self::Hash => "hash",
+            Self::Interpolation => "interpolation",
+            Self::Exponential => "exponential",
+            Self::Jump => "jump",
+            Self::All => "all",
+        }
+    }
+    
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            Self::Linear => "Linear Search",
+            Self::Binary => "Binary Search",
+            Self::Hash => "Hash Search",
+            Self::Interpolation => "Interpolation Search",
+            Self::Exponential => "Exponential Search",
+            Self::Jump => "Jump Search",
+            Self::All => "All Algorithms",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum PathfinderMenuChoice {
     RunBenchmarks,
     ConfigureGrid,
-    GuiVisualization,
+    GuiVisualisation,
     AlgorithmInfo,
     Back,
 }
@@ -104,12 +173,12 @@ pub enum PathfinderAlgorithm {
 
 impl PathfinderAlgorithm {
     pub fn from_str(s: &str) -> Option<Self> {
-        match s {
-            "1" | "astar" | "a*" => Some(Self::AStar),
+        match s.to_lowercase().as_str() {
+            "1" | "astar" => Some(Self::AStar),
             "2" | "dijkstra" => Some(Self::Dijkstra),
-            "3" | "bfs" | "breadth-first" => Some(Self::BreadthFirst),
-            "4" | "dfs" | "depth-first" => Some(Self::DepthFirst),
-            "5" | "greedy" | "greedy-best-first" => Some(Self::GreedyBestFirst),
+            "3" | "bfs" => Some(Self::BreadthFirst),
+            "4" | "dfs" => Some(Self::DepthFirst),
+            "5" | "greedy" => Some(Self::GreedyBestFirst),
             "a" | "all" => Some(Self::All),
             _ => None,
         }

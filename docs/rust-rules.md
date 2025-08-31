@@ -1,10 +1,10 @@
 # Rust Programming Rules & Best Practices
 
-This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, and algorithm visualization implementation.
+This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, and algorithm visualisation implementation.
 
-## Project Structure & Organization
+## Project Structure & Organisation
 
-### Module Organization
+### Module Organisation
 - Use `mod.rs` files for module declarations
 - Keep modules focused on single responsibilities
 - Organize related functionality into logical modules
@@ -31,9 +31,9 @@ src/
 │   ├── search_controller.rs # Search algorithm coordination
 │   ├── sort_controller.rs # Sort algorithm coordination
 │   └── pathfinder_controller.rs # Pathfinder algorithm coordination
-├── gui/                 # GUI visualization functionality
+├── gui/                 # GUI visualisation functionality
 │   ├── mod.rs           # Module exports
-│   ├── sorting.rs       # Core sorting visualization logic
+│   ├── sorting.rs       # Core sorting visualisation logic
 │   ├── visualisation.rs # GUI algorithm runners
 │   └── renderer.rs      # Frame and GIF rendering
 ├── search/              # Search algorithm implementations
@@ -50,7 +50,7 @@ src/
 ```
 
 ### Algorithm Module Structure
-Algorithm implementations are organized in dedicated modules:
+Algorithm implementations are organised in dedicated modules:
 - `sort/` - Contains 13 sorting algorithms (bubble, insertion, selection, merge, quick, heap, shell, tim, tree, bucket, radix, counting, cube)
 - `search/` - Contains 6 search algorithms (linear, binary, hash, interpolation, jump, exponential)
 - `pathfinder/` - Contains 5 pathfinding algorithms (A*, Dijkstra, breadth-first, depth-first, greedy best-first)
@@ -59,7 +59,7 @@ Algorithm implementations are organized in dedicated modules:
 ## MVC Architecture
 
 ### Model-View-Controller Pattern
-This project follows a clean MVC architecture for better organization and maintainability:
+This project follows a clean MVC architecture for better organisation and maintainability:
 
 #### Models (`src/models/`)
 - **Purpose**: Data structures, configuration, and business entities
@@ -91,17 +91,17 @@ This project follows a clean MVC architecture for better organization and mainta
 - Use descriptive names that clearly indicate purpose
 
 ### Language & Spelling Standards
-- **Use American English (US) spelling** throughout the codebase for consistency with Rust ecosystem
-- Apply US spelling to variable names, function names, file names, comments, and documentation
+- **Use English (GB) spelling** throughout the codebase for consistency with Rust ecosystem
+- Apply GB spelling to variable names, function names, file names, comments, and documentation
 - Common examples:
-  - `visualization` not `visualisation`
-  - `analyze` not `analyse` 
-  - `color` not `colour`
-  - `optimization` not `optimisation`
-  - `initialize` not `initialise`
-  - `realize` not `realise`
-  - `organize` not `organise`
-  - `centralize` not `centralise`
+  - `visualisation` not `visualization`
+  - `analyse` not `analyze` 
+  - `colour` not `color`
+  - `optimisation` not `optimization`
+  - `initialise` not `initialize`
+  - `realise` not `realize`
+  - `organise` not `organize`
+  - `centralise` not `centralize`
 
 ### Error Handling
 - Use `Result<T, E>` for fallible operations
@@ -146,7 +146,7 @@ Error::generic("Unexpected algorithm failure")
 - Use `Vec<String>` for search algorithm inputs
 - Use `Grid` with `Vec<Vec<CellType>>` for pathfinding algorithm inputs
 - Use `HashMap<String, usize>` for hash-based search implementations
-- Use `VecDeque<SortStep>` for visualization step recording
+- Use `VecDeque<SortStep>` for visualisation step recording
 - Use `Vec<Position>` for pathfinding results and path representation
 - Consider using `BTreeMap` when deterministic ordering is needed for reproducible results
 
@@ -180,10 +180,10 @@ Error::generic("Unexpected algorithm failure")
 - Support different heuristics (Manhattan distance, Euclidean distance)
 
 ### Visualization Integration
-- Use `GuiPerformanceCounter` for recording visualization steps
+- Use `GuiPerformanceCounter` for recording visualisation steps
 - Implement context ranges for recursive algorithms (purple highlighting)
 - Record comparisons (red highlighting) and swaps (green highlighting) appropriately
-- Ensure consistent color scheme across all algorithm visualizations
+- Ensure consistent colour scheme across all algorithm visualisations
 
 
 
@@ -199,7 +199,7 @@ Error::generic("Unexpected algorithm failure")
 - Maintain clear project documentation
 - Include build and run instructions
 - Document algorithm time and space complexities
-- Include performance benchmark results and visualization features
+- Include performance benchmark results and visualisation features
 
 ## Dependencies
 
@@ -213,7 +213,7 @@ Error::generic("Unexpected algorithm failure")
 - `rayon` - Parallel processing
 
 ### GUI Dependencies (Feature-gated)
-- `gif` - GIF generation for algorithm visualization (optional)
+- `gif` - GIF generation for algorithm visualisation (optional)
 
 ### Development Dependencies
 - `criterion` - Benchmarking
@@ -223,10 +223,10 @@ Error::generic("Unexpected algorithm failure")
 ## GUI Architecture
 
 ### Centralized GUI Module (`src/gui/`)
-All GUI and visualization functionality is centralized in the `gui` module:
+All GUI and visualisation functionality is centralized in the `gui` module:
 
 #### GUI Components
-- **sorting.rs**: Core sorting visualization logic, step recording, and GIF generation
+- **sorting.rs**: Core sorting visualisation logic, step recording, and GIF generation
 - **visualisation.rs**: Algorithm-specific GUI runners and entry points  
 - **renderer.rs**: Frame rendering utilities and static image generation
 
@@ -234,8 +234,8 @@ All GUI and visualization functionality is centralized in the `gui` module:
 - **Feature-gated**: All GUI code behind `#[cfg(feature = "gui")]`
 - **Modular**: Separate concerns (step recording, frame rendering, algorithm coordination)
 - **Performance**: Efficient frame generation with consistent scaling and memory usage
-- **User-friendly**: Clear progress indication, error handling, and color-coded visualization
-- **Consistent**: Standardized color scheme
+- **User-friendly**: Clear progress indication, error handling, and colour-coded visualisation
+- **Consistent**: Standardized colour scheme
   - **Sorting**: purple=context, red=comparison, green=swap, blue=default
   - **Pathfinding**: blue=open, black=blocked, purple=context, red=comparison, green=path
 
@@ -262,7 +262,7 @@ All GUI and visualization functionality is centralized in the `gui` module:
 
 ### Commit Messages
 - Use conventional commit format
-- Include scope: `feat(sort): add heap sort implementation` or `fix(gui): correct color scheme in visualization`
+- Include scope: `feat(sort): add heap sort implementation` or `fix(gui): correct colour scheme in visualisation`
 - Keep commits focused and atomic
 
 ### Branching Strategy
@@ -287,7 +287,7 @@ codegen-units = 1
 panic = "abort"
 ```
 
-This ensures optimal performance for sorting algorithms, search algorithms, and visualization rendering.
+This ensures optimal performance for sorting algorithms, search algorithms, and visualisation rendering.
 
 ## MVC Implementation Guidelines
 
@@ -322,5 +322,5 @@ This ensures optimal performance for sorting algorithms, search algorithms, and 
 - Feature-gate all GUI dependencies behind `#[cfg(feature = "gui")]`
 - Provide fallbacks for non-GUI builds
 - Separate rendering logic from core algorithm logic
-- Efficient memory usage for visualization with large datasets
-- Implement consistent color coding across all algorithm visualizations
+- Efficient memory usage for visualisation with large datasets
+- Implement consistent colour coding across all algorithm visualisations

@@ -25,7 +25,7 @@ pub struct SortStep {
     pub step_type: StepType,
 }
 
-pub struct SortVisualizer {
+pub struct SortVisualiser {
     steps: VecDeque<SortStep>,
     current_step: usize,
     array_size: usize,
@@ -33,7 +33,7 @@ pub struct SortVisualizer {
     fixed_max_value: Option<f64>,
 }
 
-impl SortVisualizer {
+impl SortVisualiser {
     pub fn new(array_size: usize) -> Self {
         Self {
             steps: VecDeque::new(),
@@ -73,7 +73,7 @@ impl SortVisualizer {
         self.fixed_max_value = Some(max_value);
     }
 
-    pub fn visualize_algorithm<F>(&mut self, algorithm_name: &str, mut array: Vec<i32>, sort_fn: F) -> Result<()>
+    pub fn visualise_algorithm<F>(&mut self, algorithm_name: &str, mut array: Vec<i32>, sort_fn: F) -> Result<()>
     where
         F: Fn(&mut [i32], &mut GuiPerformanceCounter),
     {
@@ -121,7 +121,7 @@ impl SortVisualizer {
         }
     }
 
-    pub fn visualize_algorithm_with_choice<F>(&mut self, algorithm_name: &str, mut array: Vec<i32>, sort_fn: F, use_gif: bool) -> Result<()>
+    pub fn visualise_algorithm_with_choice<F>(&mut self, algorithm_name: &str, mut array: Vec<i32>, sort_fn: F, use_gif: bool) -> Result<()>
     where
         F: Fn(&mut [i32], &mut GuiPerformanceCounter),
     {

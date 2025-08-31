@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use crate::sort::SortCoordinator;
-use crate::gui::visualisation::{run_gui_visualization, run_all_gui_visualizations};
-use crate::models::{SortConfig, SortMenuChoice};
+use crate::gui::visualisation::{run_gui_visualisation, run_all_gui_visualisations};
+use crate::models::{SortConfig, SortMenuChoice, SortAlgorithm};
 use crate::views::{MenuDisplay, InputHandler, ConsoleView};
 
 pub struct SortController {
@@ -106,47 +106,67 @@ impl SortController {
     async fn handle_gui_visualisation(&mut self) -> Result<()> {
         self.console.print_subheader("GUI Visualisation");
         
-        let algorithm = self.input_handler.get_algorithm_name()?;
+        let algorithm = match self.input_handler.get_sort_algorithm() {
+            Ok(algo) => algo,
+            Err(e) => {
+                if e.to_string().contains("cancelled") {
+                    return Ok(());
+                }
+                return Err(e);
+            }
+        };
+        
         let size = self.input_handler.get_visualisation_size()?;
         
-        if let Err(e) = run_gui_visualization(&algorithm, size) {
-            self.console.print_error(&format!("GUI Error: {}", e));
-            return Err(e);
+        match algorithm {
+            SortAlgorithm::All => {
+                if let Err(e) = run_all_gui_visualisations(size) {
+                    self.console.print_error(&format!("GUI Error: {}", e));
+                    return Err(e);
+                }
+                self.console.print_success("All GUI visualisations completed!");
+            }
+            _ => {
+                if let Err(e) = run_gui_visualisation(algorithm.as_str(), size) {
+                    self.console.print_error(&format!("GUI Error: {}", e));
+                    return Err(e);
+                }
+                self.console.print_success("GUI visualisation completed!");
+            }
         }
         
-        self.console.print_success("GUI visualisation completed!");
         Ok(())
     }
     
     async fn handle_gui_mode(&mut self, size: usize) -> Result<()> {
-        self.console.print_info("GUI Visualisation Mode Enabled!");
-        
         loop {
             match self.menu_display.show_gui_algorithm_menu() {
                 Ok(choice) => {
+                    if choice == "back" {
+                        break;
+                    }
+                    
                     if choice == "all" {
-                        if let Err(e) = run_all_gui_visualizations(size) {
+                        if let Err(e) = run_all_gui_visualisations(size) {
                             self.console.print_error(&format!("GUI Error: {}", e));
                         } else {
                             self.console.print_success("All GUI visualisations completed!");
                         }
-                        break;
                     } else {
-                        if let Err(e) = run_gui_visualization(&choice, size) {
+                        if let Err(e) = run_gui_visualisation(&choice, size) {
                             self.console.print_error(&format!("GUI Error: {}", e));
                         } else {
                             self.console.print_success("GUI visualisation completed!");
                         }
+                    }
+                    
+                    if choice != "all" && !self.console.confirm("Visualise another algorithm?", true)? {
                         break;
                     }
                 }
                 Err(e) => {
-                    if e.to_string().contains("User quit") {
-                        self.console.print_goodbye();
-                        break;
-                    } else {
-                        return Err(e);
-                    }
+                    self.console.print_error(&format!("Menu Error: {}", e));
+                    break;
                 }
             }
         }

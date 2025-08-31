@@ -275,7 +275,7 @@ impl SearchCoordinator {
             } else if metric.actual_complexity <= 3.0 {
                 "Good"  
             } else {
-                "Needs Optimization"
+                "Needs Optimisation"
             };
 
             table.add_row(Row::new(vec![

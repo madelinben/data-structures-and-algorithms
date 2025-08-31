@@ -11,7 +11,6 @@ pub mod bucket_sort;
 pub mod radix_sort;
 pub mod counting_sort;
 pub mod cube_sort;
-pub mod gui;
 
 use crate::prelude::*;
 use std::time::{Duration, Instant};

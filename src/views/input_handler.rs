@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::views::ConsoleView;
-use crate::models::{SearchConfig, SortConfig, BenchmarkParams};
+use crate::models::{SearchConfig, SortConfig, BenchmarkParams, SortAlgorithm, SearchAlgorithm};
 
 pub struct InputHandler {
     console: ConsoleView,
@@ -78,28 +78,44 @@ impl InputHandler {
         Ok(path)
     }
     
-    pub fn get_algorithm_name(&self) -> Result<String> {
-        self.console.print_info("GUI Visualisation");
-        println!("Select an algorithm to visualise:");
-        println!("Available: bubble, insertion, selection, merge, quick");
+    pub fn get_sort_algorithm(&self) -> Result<SortAlgorithm> {
+        println!("Select a sorting algorithm:");
+        println!("1. Bubble Sort          2. Insertion Sort       3. Selection Sort");
+        println!("4. Merge Sort           5. Quick Sort            6. Heap Sort");
+        println!("7. Shell Sort           8. Tim Sort              9. Tree Sort");
+        println!("10. Bucket Sort         11. Radix Sort           12. Counting Sort");
+        println!("13. Cube Sort           a. All Algorithms        b. Back");
+        println!("\n💡 You can also type algorithm names like 'bubble', 'merge', 'quick', etc.");
         
-        let algorithm = self.console.get_input("Enter algorithm name: ")?;
+        let choice = self.console.get_input("Enter choice (number or name): ")?;
         
-        if algorithm.trim().is_empty() {
-            return Err(Error::input("No algorithm specified"));
+        if choice.to_lowercase() == "b" || choice.to_lowercase() == "back" {
+            return Err(Error::input("User cancelled".to_string()));
         }
         
-        let valid_algorithms = vec![
-            "bubble", "insertion", "selection", "merge", "quick", 
-            "heap", "shell", "tim", "tree", "bucket", "radix", 
-            "counting", "cube"
-        ];
+        match SortAlgorithm::from_str(&choice) {
+            Some(algorithm) => Ok(algorithm),
+            None => Err(Error::validation(format!("Unknown sorting algorithm: '{}'. Try numbers 1-13 or names like 'bubble', 'merge', etc.", choice))),
+        }
+    }
+    
+    pub fn get_search_algorithm(&self) -> Result<SearchAlgorithm> {
+        println!("Select a search algorithm:");
+        println!("1. Linear Search        2. Binary Search         3. Hash Search");
+        println!("4. Interpolation Search 5. Exponential Search    6. Jump Search");
+        println!("a. All Algorithms       b. Back");
+        println!("\n💡 You can also type algorithm names like 'linear', 'binary', 'hash', etc.");
         
-        if !valid_algorithms.contains(&algorithm.trim()) {
-            return Err(Error::validation(format!("Unknown algorithm: {}", algorithm.trim())));
+        let choice = self.console.get_input("Enter choice (number or name): ")?;
+        
+        if choice.to_lowercase() == "b" || choice.to_lowercase() == "back" {
+            return Err(Error::input("User cancelled".to_string()));
         }
         
-        Ok(algorithm.trim().to_string())
+        match SearchAlgorithm::from_str(&choice) {
+            Some(algorithm) => Ok(algorithm),
+            None => Err(Error::validation(format!("Unknown search algorithm: '{}'. Try numbers 1-6 or names like 'linear', 'binary', etc.", choice))),
+        }
     }
     
     pub fn get_array_type_for_analysis(&self) -> Result<String> {

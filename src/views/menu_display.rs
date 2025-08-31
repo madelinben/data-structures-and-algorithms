@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::views::ConsoleView;
-use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice, PathfinderMenuChoice};
+use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice, PathfinderMenuChoice, SortAlgorithm};
 
 pub struct MenuDisplay {
     console: ConsoleView,
@@ -108,29 +108,20 @@ impl MenuDisplay {
         println!("4. Merge Sort           5. Quick Sort            6. Heap Sort");
         println!("7. Shell Sort           8. Tim Sort              9. Tree Sort");
         println!("10. Bucket Sort         11. Radix Sort           12. Counting Sort");
-        println!("13. Cube Sort           a. All Algorithms        q. Quit");
+        println!("13. Cube Sort           a. All Algorithms        b. Back");
+        println!("\n💡 You can also type algorithm names like 'bubble', 'merge', 'quick', etc.");
         
         loop {
-            let input = self.console.get_input("\nSelect algorithm (1-13, 'a', or 'q'): ")?;
+            let input = self.console.get_input("\nSelect algorithm (number or name): ")?;
             
-            match input.as_str() {
-                "1" => return Ok("bubble".to_string()),
-                "2" => return Ok("insertion".to_string()),
-                "3" => return Ok("selection".to_string()),
-                "4" => return Ok("merge".to_string()),
-                "5" => return Ok("quick".to_string()),
-                "6" => return Ok("heap".to_string()),
-                "7" => return Ok("shell".to_string()),
-                "8" => return Ok("tim".to_string()),
-                "9" => return Ok("tree".to_string()),
-                "10" => return Ok("bucket".to_string()),
-                "11" => return Ok("radix".to_string()),
-                "12" => return Ok("counting".to_string()),
-                "13" => return Ok("cube".to_string()),
-                "a" | "all" => return Ok("all".to_string()),
-                "q" => return Err(Error::input("User quit GUI selection")),
-                _ => {
-                    self.console.print_error("Invalid choice. Please enter 1-13, 'a', or 'q'.");
+            if input.to_lowercase() == "b" || input.to_lowercase() == "back" {
+                return Ok("back".to_string());
+            }
+            
+            match SortAlgorithm::from_str(&input) {
+                Some(algorithm) => return Ok(algorithm.as_str().to_string()),
+                None => {
+                    self.console.print_error(&format!("Unknown algorithm: '{}'. Try numbers 1-13 or names like 'bubble', 'merge', etc.", input));
                 }
             }
         }
@@ -177,7 +168,7 @@ impl MenuDisplay {
         let options = vec![
             ("1", "Run Pathfinding Benchmarks (All Algorithms)"),
             ("2", "Configure Grid Settings"),
-            ("3", "GUI Visualization (Generate GIFs)"),
+            ("3", "GUI Visualisation (Generate GIFs)"),
             ("4", "Algorithm Information"),
             ("b", "Back to Main Menu"),
         ];
@@ -190,7 +181,7 @@ impl MenuDisplay {
             match input.as_str() {
                 "1" => return Ok(PathfinderMenuChoice::RunBenchmarks),
                 "2" => return Ok(PathfinderMenuChoice::ConfigureGrid),
-                "3" => return Ok(PathfinderMenuChoice::GuiVisualization),
+                "3" => return Ok(PathfinderMenuChoice::GuiVisualisation),
                 "4" => return Ok(PathfinderMenuChoice::AlgorithmInfo),
                 "b" | "B" | "back" => return Ok(PathfinderMenuChoice::Back),
                 _ => {

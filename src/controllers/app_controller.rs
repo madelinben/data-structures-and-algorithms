@@ -131,7 +131,7 @@ impl AppController {
         };
         
         use crate::models::PathfinderAlgorithm;
-        self.pathfinder_controller.run_single_algorithm(PathfinderAlgorithm::All, config).await
+        self.pathfinder_controller.run_single_algorithm(PathfinderAlgorithm::AStar, config).await
     }
     
     fn create_cli(&self) -> Command {
@@ -187,7 +187,7 @@ impl AppController {
                     .arg(
                         Arg::new("gui")
                             .long("gui")
-                            .help("Enable GUI visualization")
+                            .help("Enable GUI visualisation")
                             .action(clap::ArgAction::SetTrue)
                     )
             )
@@ -229,7 +229,7 @@ impl AppController {
                     .arg(
                         Arg::new("gui")
                             .long("gui")
-                            .help("Enable GUI visualization")
+                            .help("Enable GUI visualisation")
                             .action(clap::ArgAction::SetTrue)
                     )
             )

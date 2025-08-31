@@ -112,14 +112,14 @@ impl GuiPerformanceCounter {
     }
 }
 
-pub struct PathfinderVisualizer {
+pub struct PathfinderVisualiser {
     steps: VecDeque<PathfinderStep>,
     current_step: usize,
     grid_size: (usize, usize),
     delay_ms: u64,
 }
 
-impl PathfinderVisualizer {
+impl PathfinderVisualiser {
     pub fn new(grid_size: (usize, usize)) -> Self {
         Self {
             steps: VecDeque::new(),
@@ -152,13 +152,13 @@ impl PathfinderVisualizer {
         self.current_step = 0;
     }
 
-    pub fn visualize_algorithm<F>(&mut self, algorithm_name: &str, grid: Grid, pathfind_fn: F) -> Result<()>
+    pub fn visualise_algorithm<F>(&mut self, algorithm_name: &str, grid: Grid, pathfind_fn: F) -> Result<()>
     where
         F: Fn(&Grid, &mut GuiPerformanceCounter) -> Result<(Vec<Position>, PerformanceCounter)>,
     {
         self.clear();
         
-        println!("🎨 Starting GUI visualization for {}", algorithm_name);
+        println!("🎨 Starting GUI visualisation for {}", algorithm_name);
         println!("Grid size: {}x{}", grid.width, grid.height);
         
         self.add_step(
@@ -224,7 +224,7 @@ impl PathfinderVisualizer {
         }
     }
 
-    pub fn visualize_algorithm_with_choice<F>(&mut self, algorithm_name: &str, grid: Grid, pathfind_fn: F, use_gif: bool) -> Result<()>
+    pub fn visualise_algorithm_with_choice<F>(&mut self, algorithm_name: &str, grid: Grid, pathfind_fn: F, use_gif: bool) -> Result<()>
     where
         F: Fn(&Grid, &mut GuiPerformanceCounter) -> Result<(Vec<Position>, PerformanceCounter)>,
     {
@@ -407,7 +407,7 @@ impl PathfinderVisualizer {
                 }
                 
 
-                let border_color = (0, 0, 0);
+                let border_colour = (0, 0, 0);
                 
 
                 for dx in 0..cell_size {
@@ -418,9 +418,9 @@ impl PathfinderVisualizer {
                         if px < width as usize && py < height as usize {
                             let pixel_idx = (py * width as usize + px) * 3;
                             if pixel_idx + 2 < buffer.len() {
-                                buffer[pixel_idx] = border_color.0;
-                                buffer[pixel_idx + 1] = border_color.1;
-                                buffer[pixel_idx + 2] = border_color.2;
+                                buffer[pixel_idx] = border_colour.0;
+                                buffer[pixel_idx + 1] = border_colour.1;
+                                buffer[pixel_idx + 2] = border_colour.2;
                             }
                         }
                     }
@@ -435,9 +435,9 @@ impl PathfinderVisualizer {
                         if px < width as usize && py < height as usize {
                             let pixel_idx = (py * width as usize + px) * 3;
                             if pixel_idx + 2 < buffer.len() {
-                                buffer[pixel_idx] = border_color.0;
-                                buffer[pixel_idx + 1] = border_color.1;
-                                buffer[pixel_idx + 2] = border_color.2;
+                                buffer[pixel_idx] = border_colour.0;
+                                buffer[pixel_idx + 1] = border_colour.1;
+                                buffer[pixel_idx + 2] = border_colour.2;
                             }
                         }
                     }

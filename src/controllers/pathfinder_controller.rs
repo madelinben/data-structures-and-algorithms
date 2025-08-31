@@ -29,8 +29,8 @@ impl PathfinderController {
                 PathfinderMenuChoice::ConfigureGrid => {
                     self.handle_configure_grid().await?;
                 }
-                PathfinderMenuChoice::GuiVisualization => {
-                    self.handle_gui_visualization().await?;
+                PathfinderMenuChoice::GuiVisualisation => {
+                    self.handle_gui_visualisation().await?;
                 }
                 PathfinderMenuChoice::AlgorithmInfo => {
                     self.handle_algorithm_info().await?;
@@ -83,36 +83,50 @@ impl PathfinderController {
         Ok(())
     }
 
-    async fn handle_gui_visualization(&mut self) -> Result<()> {
-        println!("🎨 Pathfinding Visualization");
+    async fn handle_gui_visualisation(&mut self) -> Result<()> {
+        println!("🎨 Pathfinding Visualisation");
         println!("===========================");
         
         #[cfg(feature = "gui")]
         {
-            println!("Choose algorithm to visualize:");
+            loop {
+                            println!("Choose algorithm to visualise:");
             println!("1. A*");
             println!("2. Dijkstra");
             println!("3. Breadth-First Search");
             println!("4. Depth-First Search");
             println!("5. Greedy Best-First");
-            println!("a. All algorithms");
+            println!("a. All Algorithms");
+            println!("b. Back");
+            println!("\n💡 You can also type algorithm names like 'astar', 'dijkstra', 'bfs', 'dfs', etc.");
             
-            let choice = self.input_handler.get_string("Enter choice")?;
-            let grid_size = self.get_grid_size_from_user()?;
-            
-            match PathfinderAlgorithm::from_str(&choice) {
-                Some(PathfinderAlgorithm::All) => {
-                    use crate::gui::pathfinder_visualisation::run_all_pathfinder_visualizations;
-                    println!("🎬 Generating visualizations for all pathfinding algorithms...");
-                    run_all_pathfinder_visualizations(grid_size)?;
+            let choice = self.input_handler.get_string("Enter choice (number or name)")?;
+                
+                if choice.to_lowercase() == "b" || choice.to_lowercase() == "back" {
+                    break;
                 }
-                Some(algorithm) => {
-                    use crate::gui::pathfinder_visualisation::run_pathfinder_visualization;
-                    println!("🎬 Generating visualization for {}...", algorithm.display_name());
-                    run_pathfinder_visualization(algorithm.as_str(), grid_size)?;
+                
+                let grid_size = self.get_grid_size_from_user()?;
+                
+                match PathfinderAlgorithm::from_str(&choice) {
+                    Some(PathfinderAlgorithm::All) => {
+                        use crate::gui::pathfinder_visualisation::run_all_pathfinder_visualisations;
+                        println!("🎬 Generating visualisations for all pathfinding algorithms...");
+                        run_all_pathfinder_visualisations(grid_size)?;
+                    }
+                    Some(algorithm) => {
+                        use crate::gui::pathfinder_visualisation::run_pathfinder_visualisation;
+                        println!("🎬 Generating visualisation for {}...", algorithm.display_name());
+                        run_pathfinder_visualisation(algorithm.as_str(), grid_size)?;
+                    }
+                    None => {
+                        println!("❌ Invalid choice. Please enter 1-5, a, or q.");
+                        continue;
+                    }
                 }
-                None => {
-                    println!("❌ Invalid algorithm choice");
+                
+                if !self.console.confirm("Visualise another algorithm?", true)? {
+                    break;
                 }
             }
         }
@@ -120,7 +134,7 @@ impl PathfinderController {
         #[cfg(not(feature = "gui"))]
         {
             println!("❌ GUI features not enabled");
-            println!("Build with --features gui to enable visualization");
+            println!("Build with --features gui to enable visualisation");
         }
         
         self.console.wait_for_enter("Press Enter to continue...");
@@ -199,12 +213,15 @@ impl PathfinderController {
         
         self.coordinator.generate_test_grids((config.grid_width, config.grid_height), config.obstacle_percentage)?;
         
-        let _metrics = match algorithm {
+        let _metrics: Vec<crate::pathfinder::PathfindingMetrics> = match algorithm {
             PathfinderAlgorithm::All => {
                 self.coordinator.run_benchmarks((config.grid_width, config.grid_height), config.iterations)?
             }
-            _ => {
-
+            PathfinderAlgorithm::AStar |
+            PathfinderAlgorithm::Dijkstra |
+            PathfinderAlgorithm::BreadthFirst |
+            PathfinderAlgorithm::DepthFirst |
+            PathfinderAlgorithm::GreedyBestFirst => {
                 println!("🚧 Single algorithm benchmarking not yet fully implemented");
                 Vec::new()
             }

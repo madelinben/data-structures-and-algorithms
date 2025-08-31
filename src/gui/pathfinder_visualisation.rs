@@ -1,40 +1,40 @@
 use crate::prelude::*;
 use crate::models::PathfinderAlgorithm;
 use crate::pathfinder::{Grid, Position, CellType, PerformanceCounter};
-use crate::gui::pathfinder::{PathfinderVisualizer, GuiPerformanceCounter};
+use crate::gui::pathfinder::{PathfinderVisualiser, GuiPerformanceCounter};
 use rand::{rng, Rng};
 use std::io::{self, Write};
 use std::collections::{HashMap, HashSet, VecDeque};
 
-pub fn run_pathfinder_visualization(algorithm: &str, grid_size: (usize, usize)) -> Result<()> {
-    let mut visualizer = PathfinderVisualizer::new(grid_size);
+pub fn run_pathfinder_visualisation(algorithm: &str, grid_size: (usize, usize)) -> Result<()> {
+    let mut visualiser = PathfinderVisualiser::new(grid_size);
     
 
     let grid = create_test_grid(grid_size.0, grid_size.1, 0.25)?;
     
     match algorithm {
         "astar" | "a*" => {
-            visualizer.visualize_algorithm("A*", grid, |grid, counter| {
+            visualiser.visualise_algorithm("A*", grid, |grid, counter| {
                 astar_with_gui(grid, counter)
             })?;
         },
         "dijkstra" => {
-            visualizer.visualize_algorithm("Dijkstra", grid, |grid, counter| {
+            visualiser.visualise_algorithm("Dijkstra", grid, |grid, counter| {
                 dijkstra_with_gui(grid, counter)
             })?;
         },
         "breadth-first" | "bfs" => {
-            visualizer.visualize_algorithm("Breadth-First Search", grid, |grid, counter| {
+            visualiser.visualise_algorithm("Breadth-First Search", grid, |grid, counter| {
                 breadth_first_with_gui(grid, counter)
             })?;
         },
         "depth-first" | "dfs" => {
-            visualizer.visualize_algorithm("Depth-First Search", grid, |grid, counter| {
+            visualiser.visualise_algorithm("Depth-First Search", grid, |grid, counter| {
                 depth_first_with_gui(grid, counter)
             })?;
         },
         "greedy-best-first" | "greedy" => {
-            visualizer.visualize_algorithm("Greedy Best-First", grid, |grid, counter| {
+            visualiser.visualise_algorithm("Greedy Best-First", grid, |grid, counter| {
                 greedy_best_first_with_gui(grid, counter)
             })?;
         },
@@ -46,8 +46,8 @@ pub fn run_pathfinder_visualization(algorithm: &str, grid_size: (usize, usize)) 
     Ok(())
 }
 
-pub fn run_all_pathfinder_visualizations(grid_size: (usize, usize)) -> Result<()> {
-    println!("🎨 Running GUI visualizations for all 5 pathfinding algorithms!");
+pub fn run_all_pathfinder_visualisations(grid_size: (usize, usize)) -> Result<()> {
+    println!("🎨 Running GUI visualisations for all 5 pathfinding algorithms!");
     
     println!("Choose output format:");
     println!("1. Static PNG (fast)");  
@@ -61,7 +61,7 @@ pub fn run_all_pathfinder_visualizations(grid_size: (usize, usize)) -> Result<()
     if use_gif {
         println!("📺 Will generate animated GIFs for all algorithms...");
     } else {
-        println!("📷 Will generate static visualizations for all algorithms...");
+        println!("📷 Will generate static visualisations for all algorithms...");
     }
     
     let algorithms = vec![
@@ -75,31 +75,31 @@ pub fn run_all_pathfinder_visualizations(grid_size: (usize, usize)) -> Result<()
 
         let grid = create_test_grid(grid_size.0, grid_size.1, 0.25)?;
         
-        let mut visualizer = PathfinderVisualizer::new(grid_size);
+        let mut visualiser = PathfinderVisualiser::new(grid_size);
         
         match algorithm.as_ref() {
             "A*" => {
-                visualizer.visualize_algorithm_with_choice("A*", grid, |grid, counter| {
+                visualiser.visualise_algorithm_with_choice("A*", grid, |grid, counter| {
                     astar_with_gui(grid, counter)
                 }, use_gif)?;
             },
             "Dijkstra" => {
-                visualizer.visualize_algorithm_with_choice("Dijkstra", grid, |grid, counter| {
+                visualiser.visualise_algorithm_with_choice("Dijkstra", grid, |grid, counter| {
                     dijkstra_with_gui(grid, counter)
                 }, use_gif)?;
             },
             "Breadth-First Search" => {
-                visualizer.visualize_algorithm_with_choice("Breadth-First Search", grid, |grid, counter| {
+                visualiser.visualise_algorithm_with_choice("Breadth-First Search", grid, |grid, counter| {
                     breadth_first_with_gui(grid, counter)
                 }, use_gif)?;
             },
             "Depth-First Search" => {
-                visualizer.visualize_algorithm_with_choice("Depth-First Search", grid, |grid, counter| {
+                visualiser.visualise_algorithm_with_choice("Depth-First Search", grid, |grid, counter| {
                     depth_first_with_gui(grid, counter)
                 }, use_gif)?;
             },
             "Greedy Best-First" => {
-                visualizer.visualize_algorithm_with_choice("Greedy Best-First", grid, |grid, counter| {
+                visualiser.visualise_algorithm_with_choice("Greedy Best-First", grid, |grid, counter| {
                     greedy_best_first_with_gui(grid, counter)
                 }, use_gif)?;
             },
@@ -112,7 +112,7 @@ pub fn run_all_pathfinder_visualizations(grid_size: (usize, usize)) -> Result<()
         println!("✅ Completed: {}\n", algorithm);
     }
     
-    println!("🎉 All {} pathfinding algorithm visualizations completed!", algorithms.len());
+    println!("🎉 All {} pathfinding algorithm visualisations completed!", algorithms.len());
     Ok(())
 }
 

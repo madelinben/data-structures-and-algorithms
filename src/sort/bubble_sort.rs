@@ -22,7 +22,7 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
     }
 }
 
-pub fn sort_optimized(arr: &mut [i32], counter: &mut PerformanceCounter) {
+pub fn sort_optimised(arr: &mut [i32], counter: &mut PerformanceCounter) {
     let n = arr.len();
     if n <= 1 {
         return;
