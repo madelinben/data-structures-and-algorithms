@@ -318,6 +318,51 @@ This ensures optimal performance for sorting algorithms, search algorithms, and 
 - **Visualization**: Use `GuiPerformanceCounter` for step recording in GUI wrapper functions
 - **Grid Operations**: Validate positions, handle obstacles, implement proper neighbor checking
 
+### User Input Standards
+All algorithm selection inputs throughout the application follow a consistent, simplified structure:
+
+#### Input Format Rules
+- **Numbers**: Accept numeric choices (1, 2, 3, etc.) for quick selection
+- **Simple Names**: Accept basic algorithm names without variations (e.g., "bubble", "merge", "quick")
+- **All Option**: Accept "a", "A", or "all" for running all algorithms
+- **Case Insensitive**: All text inputs are converted to lowercase for matching
+
+#### Sorting Algorithm Input
+- **Numbers**: 1-13 corresponding to the algorithm list
+- **Names**: `bubble`, `insertion`, `selection`, `merge`, `quick`, `heap`, `shell`, `tim`, `tree`, `bucket`, `radix`, `counting`, `cube`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to sort menu)
+
+#### Search Algorithm Input  
+- **Numbers**: 1-6 corresponding to the algorithm list
+- **Names**: `linear`, `binary`, `hash`, `interpolation`, `exponential`, `jump`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to search menu)
+
+#### Pathfinding Algorithm Input
+- **Numbers**: 1-5 corresponding to the algorithm list  
+- **Names**: `astar`, `dijkstra`, `bfs`, `dfs`, `greedy`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to pathfinder menu)
+
+#### Rejected Input Variations
+Do not accept complex variations or shortcuts:
+- No hyphenated versions: ~~`bubble-sort`~~, ~~`merge-sort`~~
+- No compound versions: ~~`bubblesort`~~, ~~`mergesort`~~  
+- No abbreviations: ~~`qsort`~~, ~~`msort`~~, ~~`bst`~~
+- No full descriptions: ~~`bubble sort`~~, ~~`quick sort`~~
+
+#### Input Validation
+- Use `SortAlgorithm::from_str()`, `SearchAlgorithm::from_str()`, `PathfinderAlgorithm::from_str()` for parsing
+- Provide clear error messages with examples of valid input
+- Show helpful hints about accepted input formats
+
+#### CLI Integration
+- Interactive mode algorithm selection follows the same input rules
+- CLI subcommands use structured arguments (no algorithm selection by name in CLI)
+- All interactive prompts maintain consistent input validation
+- Error messages provide context-specific examples
+
 ### GUI Integration Guidelines
 - Feature-gate all GUI dependencies behind `#[cfg(feature = "gui")]`
 - Provide fallbacks for non-GUI builds
