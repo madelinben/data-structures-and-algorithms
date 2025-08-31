@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::views::ConsoleView;
-use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice};
+use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice, PathfinderMenuChoice};
 
 pub struct MenuDisplay {
     console: ConsoleView,
@@ -19,17 +19,19 @@ impl MenuDisplay {
         let options = vec![
             ("1", "Search Algorithms (Linear, Binary, Hash, etc.)"),
             ("2", "Sorting Algorithms (13+ algorithms with benchmarking)"),
+            ("3", "Pathfinding Algorithms (A*, Dijkstra, BFS, DFS, etc.)"),
             ("q", "Quit"),
         ];
         
         self.console.print_menu_options(&options);
         
         loop {
-            let input = self.console.get_input("\nPlease select an option (1-2, or q to quit): ")?;
+            let input = self.console.get_input("\nPlease select an option (1-3, or q to quit): ")?;
             
             match input.as_str() {
                 "1" => return Ok(MainMenuChoice::Search),
                 "2" => return Ok(MainMenuChoice::Sort),
+                "3" => return Ok(MainMenuChoice::Pathfinder),
                 "q" | "Q" | "quit" => return Ok(MainMenuChoice::Quit),
                 _ => {
                     self.console.print_error("Invalid option. Please try again.");
@@ -167,6 +169,36 @@ impl MenuDisplay {
         println!("  • Adaptive: Performs better on partially sorted data");  
         println!("  • In-Place: Uses O(1) extra memory");
         println!("  • n = array size, k = range of input, d = number of digits");
+    }
+    
+    pub fn show_pathfinder_menu(&self) -> Result<PathfinderMenuChoice> {
+        self.console.print_subheader("Pathfinding Algorithm Benchmarking");
+        
+        let options = vec![
+            ("1", "Run Pathfinding Benchmarks (All Algorithms)"),
+            ("2", "Configure Grid Settings"),
+            ("3", "GUI Visualization (Generate GIFs)"),
+            ("4", "Algorithm Information"),
+            ("b", "Back to Main Menu"),
+        ];
+        
+        self.console.print_menu_options(&options);
+        
+        loop {
+            let input = self.console.get_input("\nPlease select an option (1-4, or b to go back): ")?;
+            
+            match input.as_str() {
+                "1" => return Ok(PathfinderMenuChoice::RunBenchmarks),
+                "2" => return Ok(PathfinderMenuChoice::ConfigureGrid),
+                "3" => return Ok(PathfinderMenuChoice::GuiVisualization),
+                "4" => return Ok(PathfinderMenuChoice::AlgorithmInfo),
+                "b" | "B" | "back" => return Ok(PathfinderMenuChoice::Back),
+                _ => {
+                    self.console.print_error("Invalid option. Please try again.");
+                    self.console.pause_for_input("Press Enter to continue...")?;
+                }
+            }
+        }
     }
 }
 

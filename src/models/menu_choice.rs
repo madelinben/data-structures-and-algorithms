@@ -2,6 +2,7 @@
 pub enum MainMenuChoice {
     Search,
     Sort,
+    Pathfinder,
     Quit,
 }
 
@@ -78,6 +79,61 @@ impl SortAlgorithm {
             Self::Counting => "counting",
             Self::Cube => "cube",
             Self::All => "all",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum PathfinderMenuChoice {
+    RunBenchmarks,
+    ConfigureGrid,
+    GuiVisualization,
+    AlgorithmInfo,
+    Back,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum PathfinderAlgorithm {
+    AStar,
+    Dijkstra,
+    BreadthFirst,
+    DepthFirst,
+    GreedyBestFirst,
+    All,
+}
+
+impl PathfinderAlgorithm {
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "1" | "astar" | "a*" => Some(Self::AStar),
+            "2" | "dijkstra" => Some(Self::Dijkstra),
+            "3" | "bfs" | "breadth-first" => Some(Self::BreadthFirst),
+            "4" | "dfs" | "depth-first" => Some(Self::DepthFirst),
+            "5" | "greedy" | "greedy-best-first" => Some(Self::GreedyBestFirst),
+            "a" | "all" => Some(Self::All),
+            _ => None,
+        }
+    }
+    
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::AStar => "astar",
+            Self::Dijkstra => "dijkstra",
+            Self::BreadthFirst => "breadth-first",
+            Self::DepthFirst => "depth-first",
+            Self::GreedyBestFirst => "greedy-best-first",
+            Self::All => "all",
+        }
+    }
+    
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            Self::AStar => "A*",
+            Self::Dijkstra => "Dijkstra",
+            Self::BreadthFirst => "Breadth-First Search",
+            Self::DepthFirst => "Depth-First Search", 
+            Self::GreedyBestFirst => "Greedy Best-First",
+            Self::All => "All Algorithms",
         }
     }
 }

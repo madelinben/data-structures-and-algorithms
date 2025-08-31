@@ -136,6 +136,11 @@ impl ConsoleView {
             _ => Err(Error::validation("Please enter y/yes or n/no")),
         }
     }
+    
+    pub fn wait_for_enter(&self, message: &str) {
+        println!("{}", message);
+        let _ = self.get_input("");
+    }
 }
 
 impl Default for ConsoleView {

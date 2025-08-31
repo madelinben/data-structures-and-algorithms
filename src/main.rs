@@ -12,6 +12,7 @@ mod controllers;
 mod gui;
 mod search;
 mod sort;
+mod pathfinder;
 
 #[tokio::main]
 async fn main() -> Result<()> {

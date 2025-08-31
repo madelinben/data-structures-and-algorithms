@@ -126,6 +126,37 @@ impl InputHandler {
         self.console.get_number("Enter array size for visualisation", Some(20))
     }
     
+    pub fn get_positive_number(&self, prompt: &str, min: usize, max: usize) -> Result<usize> {
+        loop {
+            let full_prompt = format!("{} ({}-{}): ", prompt, min, max);
+            let input = self.console.get_input(&full_prompt)?;
+            
+            match input.parse::<usize>() {
+                Ok(value) => {
+                    if value < min {
+                        self.console.print_error(&format!("Value must be at least {}", min));
+                    } else if value > max {
+                        self.console.print_error(&format!("Value must be at most {}", max));
+                    } else {
+                        return Ok(value);
+                    }
+                }
+                Err(_) => {
+                    self.console.print_error("Invalid number format. Please enter a valid integer.");
+                }
+            }
+        }
+    }
+    
+    pub fn get_string(&self, prompt: &str) -> Result<String> {
+        let input = self.console.get_input(&format!("{}: ", prompt))?;
+        if input.trim().is_empty() {
+            Err(Error::input("Input cannot be empty"))
+        } else {
+            Ok(input.trim().to_string())
+        }
+    }
+    
     fn validate_search_config(&self, config: &SearchConfig) -> Result<()> {
         if config.iterations == 0 {
             return Err(Error::validation("Iterations must be greater than 0"));
