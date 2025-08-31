@@ -1,6 +1,6 @@
 # Rust Programming Rules & Best Practices
 
-This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, and algorithm visualization implementation.
+This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, and algorithm visualization implementation.
 
 ## Project Structure & Organization
 
@@ -29,7 +29,8 @@ src/
 │   ├── mod.rs           # Module exports
 │   ├── app_controller.rs # Main application controller
 │   ├── search_controller.rs # Search algorithm coordination
-│   └── sort_controller.rs # Sort algorithm coordination
+│   ├── sort_controller.rs # Sort algorithm coordination
+│   └── pathfinder_controller.rs # Pathfinder algorithm coordination
 ├── gui/                 # GUI visualization functionality
 │   ├── mod.rs           # Module exports
 │   ├── sorting.rs       # Core sorting visualization logic
@@ -41,6 +42,9 @@ src/
 ├── sort/                # Sort algorithm implementations
 │   ├── mod.rs           # Sort coordinator and benchmarking
 │   └── *.rs             # Individual sort algorithms
+├── pathfinder/          # Pathfinding algorithm implementations
+│   ├── mod.rs           # Pathfinder coordinator and benchmarking
+│   └── *.rs             # Individual pathfinding algorithms
 └── utils/               # Utility functions
     └── mod.rs
 ```
@@ -49,6 +53,7 @@ src/
 Algorithm implementations are organized in dedicated modules:
 - `sort/` - Contains 13 sorting algorithms (bubble, insertion, selection, merge, quick, heap, shell, tim, tree, bucket, radix, counting, cube)
 - `search/` - Contains 6 search algorithms (linear, binary, hash, interpolation, jump, exponential)
+- `pathfinder/` - Contains 5 pathfinding algorithms (A*, Dijkstra, breadth-first, depth-first, greedy best-first)
 - Each algorithm module includes performance tracking and proper error handling
 
 ## MVC Architecture
@@ -139,8 +144,10 @@ Error::generic("Unexpected algorithm failure")
 ### For Algorithm Implementation
 - Use `Vec<i32>` for sorting algorithm inputs for consistency
 - Use `Vec<String>` for search algorithm inputs
+- Use `Grid` with `Vec<Vec<CellType>>` for pathfinding algorithm inputs
 - Use `HashMap<String, usize>` for hash-based search implementations
 - Use `VecDeque<SortStep>` for visualization step recording
+- Use `Vec<Position>` for pathfinding results and path representation
 - Consider using `BTreeMap` when deterministic ordering is needed for reproducible results
 
 ### Memory Efficiency
@@ -163,6 +170,14 @@ Error::generic("Unexpected algorithm failure")
 - Handle sorted vs unsorted data requirements appropriately
 - Implement proper bounds checking and edge case handling
 - Use appropriate data structures for each algorithm type (arrays, hash maps)
+
+### Pathfinding Algorithm Principles
+- Use `Grid` structure with `Position` coordinates for consistent spatial representation
+- Return both path result and performance metrics (nodes explored, comparisons, duration)
+- Handle edge cases (no path exists, start equals end, invalid positions)
+- Use `PerformanceCounter` for consistent metrics tracking (nodes explored, frontier size, comparisons)
+- Implement proper neighbor validation (bounds checking, obstacle avoidance)
+- Support different heuristics (Manhattan distance, Euclidean distance)
 
 ### Visualization Integration
 - Use `GuiPerformanceCounter` for recording visualization steps
@@ -220,7 +235,9 @@ All GUI and visualization functionality is centralized in the `gui` module:
 - **Modular**: Separate concerns (step recording, frame rendering, algorithm coordination)
 - **Performance**: Efficient frame generation with consistent scaling and memory usage
 - **User-friendly**: Clear progress indication, error handling, and color-coded visualization
-- **Consistent**: Standardized color scheme (purple=context, red=comparison, green=swap, blue=default)
+- **Consistent**: Standardized color scheme
+  - **Sorting**: purple=context, red=comparison, green=swap, blue=default
+  - **Pathfinding**: blue=open, black=blocked, purple=context, red=comparison, green=path
 
 ### GUI Integration
 - Controllers coordinate between CLI/interactive modes and GUI
@@ -295,9 +312,11 @@ This ensures optimal performance for sorting algorithms, search algorithms, and 
 ### Algorithm Implementation Guidelines
 - **Sorting Algorithms**: Implement using consistent `PerformanceCounter` interface
 - **Search Algorithms**: Return tuple of (found: bool, comparisons: usize) 
-- **Performance Tracking**: Count comparisons, swaps, and memory allocations accurately
-- **Edge Cases**: Handle empty inputs, single elements, and duplicate values properly
+- **Pathfinding Algorithms**: Return tuple of (path: Vec<Position>, counter: PerformanceCounter)
+- **Performance Tracking**: Count comparisons, swaps, memory allocations, nodes explored accurately
+- **Edge Cases**: Handle empty inputs, single elements, duplicate values, and unreachable goals properly
 - **Visualization**: Use `GuiPerformanceCounter` for step recording in GUI wrapper functions
+- **Grid Operations**: Validate positions, handle obstacles, implement proper neighbor checking
 
 ### GUI Integration Guidelines
 - Feature-gate all GUI dependencies behind `#[cfg(feature = "gui")]`
