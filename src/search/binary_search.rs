@@ -1,0 +1,58 @@
+pub fn search(data: &[String], target: &str) -> (bool, usize) {
+    let mut left = 0;
+    let mut right = data.len();
+    let mut comparisons = 0;
+    
+    while left < right {
+        let mid = left + (right - left) / 2;
+        comparisons += 1;
+        
+        match data[mid].as_str().cmp(target) {
+            std::cmp::Ordering::Equal => return (true, comparisons),
+            std::cmp::Ordering::Less => left = mid + 1,
+            std::cmp::Ordering::Greater => right = mid,
+        }
+    }
+    
+    (false, comparisons)
+}
+
+pub fn search_recursive(data: &[String], target: &str) -> (bool, usize) {
+    fn binary_search_recursive(data: &[String], target: &str, left: usize, right: usize, comparisons: &mut usize) -> bool {
+        if left >= right {
+            return false;
+        }
+        
+        let mid = left + (right - left) / 2;
+        *comparisons += 1;
+        
+        match data[mid].as_str().cmp(target) {
+            std::cmp::Ordering::Equal => true,
+            std::cmp::Ordering::Less => binary_search_recursive(data, target, mid + 1, right, comparisons),
+            std::cmp::Ordering::Greater => binary_search_recursive(data, target, left, mid, comparisons),
+        }
+    }
+    
+    let mut comparisons = 0;
+    let found = binary_search_recursive(data, target, 0, data.len(), &mut comparisons);
+    (found, comparisons)
+}
+
+pub fn search_with_insertion_point(data: &[String], target: &str) -> (Option<usize>, usize, usize) {
+    let mut left = 0;
+    let mut right = data.len();
+    let mut comparisons = 0;
+    
+    while left < right {
+        let mid = left + (right - left) / 2;
+        comparisons += 1;
+        
+        match data[mid].as_str().cmp(target) {
+            std::cmp::Ordering::Equal => return (Some(mid), comparisons, mid),
+            std::cmp::Ordering::Less => left = mid + 1,
+            std::cmp::Ordering::Greater => right = mid,
+        }
+    }
+    
+    (None, comparisons, left)
+}
