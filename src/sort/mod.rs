@@ -311,11 +311,11 @@ impl SortCoordinator {
         }
     }
 
-    pub fn analyze_array_type(&mut self, array_type: &str, size: usize) -> Result<()> {
+    pub fn analyse_array_type(&mut self, array_type: &str, size: usize) -> Result<()> {
         let test_arrays = self.generate_test_arrays(size);
         
         if let Some((_, array)) = test_arrays.iter().find(|(name, _)| name == array_type) {
-            println!("\nAnalyzing performance on {} array (size: {})", array_type, size);
+            println!("\nAnalysing performance on {} array (size: {})", array_type, size);
             
             let algorithms = vec![
                 ("Quick Sort", quick_sort::sort as fn(&mut [i32], &mut PerformanceCounter)),

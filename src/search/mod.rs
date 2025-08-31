@@ -302,8 +302,8 @@ impl SearchCoordinator {
         }
     }
 
-    pub fn analyze_array_type(&self, pattern_type: &str, size: usize) -> Result<()> {
-        println!("\nAnalyzing search performance on {} pattern (size: {})", pattern_type, size);
+    pub fn analyse_array_type(&self, pattern_type: &str, size: usize) -> Result<()> {
+        println!("\nAnalysing search performance on {} pattern (size: {})", pattern_type, size);
         
         let test_words = match pattern_type.to_lowercase().as_str() {
             "short" => self.words.iter().filter(|w| w.len() <= 5).take(size).cloned().collect::<Vec<_>>(),

@@ -55,20 +55,20 @@ fn merge(
             arr[k] = aux[j];
             j += 1;
         }
-        counter.swaps += 1;
+        // Note: These are assignments, not swaps, so we don't count them as swaps
         k += 1;
     }
     
     while i < mid {
         arr[k] = aux[i];
-        counter.swaps += 1;
+        // Note: These are assignments, not swaps
         i += 1;
         k += 1;
     }
     
     while j < right {
         arr[k] = aux[j];
-        counter.swaps += 1;
+        // Note: These are assignments, not swaps  
         j += 1;
         k += 1;
     }
