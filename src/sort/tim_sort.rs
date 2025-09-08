@@ -7,10 +7,8 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
         return;
     }
 
-    // Minimum run size (typically 32-64)
     let min_run_size = calculate_min_run_size(n);
 
-    // Sort individual runs of size min_run_size using insertion sort
     let mut i = 0;
     while i < n {
         let end = min(i + min_run_size, n);
@@ -18,7 +16,6 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
         i += min_run_size;
     }
 
-    // Start merging runs of size min_run_size
     let mut size = min_run_size;
     while size < n {
         let mut start = 0;
