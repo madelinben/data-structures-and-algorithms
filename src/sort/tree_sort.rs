@@ -59,20 +59,16 @@ pub fn sort(arr: &mut [i32], counter: &mut PerformanceCounter) {
         return;
     }
 
-    // Create BST
     let mut root = TreeNode::new(arr[0]);
     counter.allocate_memory(1);
 
-    // Insert all elements into the BST
     for &value in arr.iter().skip(1) {
         root.insert(value, counter);
     }
 
-    // Perform inorder traversal to get sorted sequence
     let mut sorted_values = Vec::new();
     root.inorder_traversal(&mut sorted_values);
 
-    // Copy sorted values back to the original array
     for (i, value) in sorted_values.into_iter().enumerate() {
         if i < arr.len() {
             arr[i] = value;

@@ -141,7 +141,6 @@ impl SortVisualiser {
             algorithm_name.to_string(),
         );
         
-        // Always generate animated GIF
         self.render_animated_gif()
     }
 
@@ -204,18 +203,18 @@ impl SortVisualiser {
             
             let (r, g, b) = if step.highlighted_indices.contains(&i) {
                 match step.step_type {
-                    StepType::Comparison => (255, 50, 50),    // Red for compared indexes
-                    StepType::Swap => (50, 255, 50),          // Green for swapped indexes
-                    StepType::Normal => (50, 100, 255),       // Blue fallback
+                    StepType::Comparison => (255, 50, 50),
+                    StepType::Swap => (50, 255, 50),
+                    StepType::Normal => (50, 100, 255),
                 }
             } else if let Some((start, end)) = step.context_range {
                 if i >= start && i < end {
-                    (180, 100, 255)                           // Purple for algorithm context
+                    (180, 100, 255)
                 } else {
-                    (50, 100, 255)                            // Blue fallback
+                    (50, 100, 255)
                 }
             } else {
-                (50, 100, 255)                                // Blue fallback
+                (50, 100, 255)
             };
             
             for y in y_start..y_end {

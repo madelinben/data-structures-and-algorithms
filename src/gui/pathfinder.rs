@@ -266,7 +266,6 @@ impl PathfinderVisualiser {
             }
         }
         
-        // Always generate animated GIF
         self.render_animated_gif()
     }
 
@@ -353,21 +352,21 @@ impl PathfinderVisualiser {
                 
 
                 let (r, g, b) = if step.path_positions.contains(&pos) {
-                    (50, 255, 50)  // Green for path
+                    (50, 255, 50)
                 } else if step.current_position == Some(pos) {
-                    (255, 50, 50)  // Red for current exploration
+                    (255, 50, 50)
                 } else if step.frontier_positions.contains(&pos) {
-                    (180, 100, 255)  // Purple for frontier
+                    (180, 100, 255)
                 } else if step.explored_positions.contains(&pos) {
-                    (200, 200, 200)  // Light gray for explored
+                    (200, 200, 200)
                 } else if step.grid.cells[row][col] == CellType::Blocked {
-                    (0, 0, 0)      // Black for obstacles
+                    (0, 0, 0)
                 } else if step.grid.cells[row][col] == CellType::Start {
-                    (0, 200, 0)    // Dark green for start
+                    (0, 200, 0)
                 } else if step.grid.cells[row][col] == CellType::End {
-                    (200, 0, 0)    // Dark red for end
+                    (200, 0, 0)
                 } else {
-                    (100, 150, 255)  // Light blue for open cells
+                    (100, 150, 255)
                 };
                 
 

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::collections::VecDeque;
 use crate::tree_traversal::{TreeNode, PerformanceCounter};
 

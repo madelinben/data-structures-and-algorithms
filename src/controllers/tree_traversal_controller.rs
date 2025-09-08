@@ -87,13 +87,13 @@ impl TreeTraversalController {
         }
         
         println!("\n🔍 Tree Analysis Options:");
-        println!("1. Analyze tree properties (depth, width, balance)");
+        println!("1. Analyse tree properties (depth, width, balance)");
         println!("2. Compare traversal performance on different tree shapes");
         
         let choice = self.console.get_input("Select analysis type (1-2): ")?;
         
         match choice.trim() {
-            "1" => self.analyze_tree_properties().await?,
+            "1" => self.analyse_tree_properties().await?,
             "2" => self.compare_tree_shapes().await?,
             _ => {
                 self.console.print_error("Invalid choice.");
@@ -104,7 +104,7 @@ impl TreeTraversalController {
         Ok(())
     }
     
-    async fn analyze_tree_properties(&mut self) -> Result<()> {
+    async fn analyse_tree_properties(&mut self) -> Result<()> {
         println!("\n📈 Tree Properties Analysis");
         
         let results = self.coordinator.run_benchmarks(100)?;
@@ -275,7 +275,7 @@ impl TreeTraversalController {
         
         println!("\n🗃️  Database Context (Prisma-style queries):");
         println!("   • Standard algorithms: fetch all related data (expensive)");
-        println!("   • Greedy algorithms: limit include depth (cost optimization)");
+        println!("   • Greedy algorithms: limit include depth (cost optimisation)");
         println!("   • Depth 1: immediate children only");
         println!("   • Depth 2: children + grandchildren");
         println!("   • Higher depths: exponential cost increase with unions/joins");

@@ -89,7 +89,6 @@ impl PerformanceCounter {
     
     pub fn compare<T: PartialOrd>(&mut self, _a: &T, _b: &T) -> bool {
         self.comparisons += 1;
-        // For simplicity, we'll always return true for depth checks
         true
     }
     
@@ -125,35 +124,26 @@ impl TreeTraversalCoordinator {
         coordinator
     }
     
-    /// Generate various test trees for benchmarking
     fn generate_test_trees(&mut self) {
-        // Binary tree (depth 4)
         self.test_trees.push(self.create_binary_tree(4));
         
-        // Ternary tree (depth 3) 
         self.test_trees.push(self.create_nary_tree(3, 3));
         
-        // Wide tree (depth 2, many children)
         self.test_trees.push(self.create_nary_tree(2, 8));
         
-        // Unbalanced tree
         self.test_trees.push(self.create_unbalanced_tree(6));
         
-        // Large binary tree (depth 6)
         self.test_trees.push(self.create_binary_tree(6));
     }
     
-    /// Create a complete binary tree with given depth
     fn create_binary_tree(&self, depth: usize) -> TreeNode<i32> {
         self.create_complete_tree(depth, 2, 1)
     }
     
-    /// Create a complete n-ary tree with given depth and branching factor
     fn create_nary_tree(&self, depth: usize, children_per_node: usize) -> TreeNode<i32> {
         self.create_complete_tree(depth, children_per_node, 1)
     }
     
-    /// Create a complete tree recursively
     fn create_complete_tree(&self, depth: usize, children_per_node: usize, value: i32) -> TreeNode<i32> {
         let mut node = TreeNode::new(value);
         
@@ -167,7 +157,6 @@ impl TreeTraversalCoordinator {
         node
     }
     
-    /// Create an unbalanced tree (left-skewed)
     fn create_unbalanced_tree(&self, nodes: usize) -> TreeNode<i32> {
         if nodes == 0 {
             return TreeNode::new(0);
@@ -180,16 +169,12 @@ impl TreeTraversalCoordinator {
             let child = TreeNode::new(i as i32);
             current.children.push(child);
             
-            // Move to the first child for next iteration
             if i < nodes {
                 let _len = root.children.len();
-                // We need to use unsafe here due to borrow checker limitations
-                // In practice, this would be handled differently
                 break;
             }
         }
         
-        // Simplified unbalanced tree creation
         let mut node = TreeNode::new(1);
         for i in 2..=nodes {
             let mut child = TreeNode::new(i as i32);
@@ -202,7 +187,6 @@ impl TreeTraversalCoordinator {
         node
     }
     
-    /// Run benchmarks for all algorithms with different tree configurations
     pub fn run_benchmarks(&self, iterations: usize) -> Result<Vec<TreeTraversalMetrics>> {
         println!("\nRunning tree traversal benchmarks");
         println!("Iterations per algorithm: {}", iterations);
@@ -214,7 +198,6 @@ impl TreeTraversalCoordinator {
             println!("\n🌳 Tree {} - Nodes: {}, Depth: {}, Leaves: {}", 
                 tree_idx + 1, tree.count_nodes(), tree.depth(), tree.count_leaves());
             
-            // Standard algorithms
             all_results.push(self.benchmark_algorithm("Pre-order", tree, iterations, |tree, counter| {
                 preorder_traversal::traverse(tree, counter)
             })?);
@@ -230,15 +213,12 @@ impl TreeTraversalCoordinator {
             all_results.push(self.benchmark_algorithm("Level-order", tree, iterations, |tree, counter| {
                 levelorder_traversal::traverse(tree, counter)
             })?);
-            
-            // Removed greedy algorithms benchmarking
         }
         
         self.display_results(&all_results);
         Ok(all_results)
     }
     
-    /// Benchmark a single algorithm
     fn benchmark_algorithm<F>(
         &self,
         name: &str,
@@ -287,14 +267,9 @@ impl TreeTraversalCoordinator {
             theoretical_time_complexity: time_complexity,
             theoretical_space_complexity: space_complexity,
             actual_nodes_ratio,
-            // depth_limit: None, // Field removed
-            // is_greedy field removed
         })
     }
     
-    // Removed benchmark_greedy_algorithm method
-    
-    /// Display benchmark results in a formatted table
     fn display_results(&self, results: &[TreeTraversalMetrics]) {
         let mut table = Table::new();
         table.add_row(Row::new(vec![
@@ -325,9 +300,7 @@ impl TreeTraversalCoordinator {
         
         table.printstd();
         
-        // Summary statistics
         println!("\n📊 Summary Statistics:");
-        // All results are now standard (non-greedy)
         let standard_results = results;
         
         if !standard_results.is_empty() {

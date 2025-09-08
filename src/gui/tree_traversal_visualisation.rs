@@ -5,8 +5,7 @@ use crate::gui::tree_traversal::{TreeTraversalVisualiser, GuiPerformanceCounter}
 pub fn run_gui_visualisation(algorithm: &str, tree_depth: usize) -> Result<()> {
     let mut visualiser = TreeTraversalVisualiser::new(tree_depth);
     
-    // Create a 5-layer binary tree for visualisation
-    let tree = create_test_tree(5, 2)?; // Always 5 layers, binary tree
+    let tree = create_test_tree(5, 2)?;
     
     match algorithm {
         "preorder" | "pre" => {
@@ -29,7 +28,6 @@ pub fn run_gui_visualisation(algorithm: &str, tree_depth: usize) -> Result<()> {
                 levelorder_with_gui(tree, counter)
             })?;
         },
-        // Removed greedy algorithm variants
         _ => {
             return Err(Error::validation(format!("Unknown tree traversal algorithm: {}", algorithm)));
         }
@@ -49,7 +47,7 @@ pub fn run_all_tree_visualisations(tree_depth: usize, use_gif: bool) -> Result<(
     for (i, algorithm) in algorithms.iter().enumerate() {
         println!("🔄 Processing {}/{}: {}", i + 1, algorithms.len(), algorithm);
         
-        let tree = create_test_tree(5, 2)?; // Always 5 layers for consistent visualization
+        let tree = create_test_tree(5, 2)?;
         let mut visualiser = TreeTraversalVisualiser::new(tree_depth);
         
         match algorithm {
@@ -94,7 +92,6 @@ pub fn run_custom_tree_visualisation(depth: usize, children_per_node: usize) -> 
     let tree = create_test_tree(depth, children_per_node)?;
     let mut visualiser = TreeTraversalVisualiser::new(depth);
     
-    // Demonstrate all traversals on the custom tree
     let algorithms = vec![
         ("Pre-order", "preorder"),
         ("Level-order", "levelorder"),
@@ -157,7 +154,6 @@ fn preorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter) 
 fn inorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter) -> (Vec<i32>, PerformanceCounter) {
     let perf_counter = PerformanceCounter::new();
     
-    // Simulate in-order traversal with detailed step recording
     let mut result = Vec::new();
     inorder_traverse_with_steps(tree, counter, &mut result, &mut vec![]);
     
@@ -167,7 +163,6 @@ fn inorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter) -
 fn postorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter) -> (Vec<i32>, PerformanceCounter) {
     let perf_counter = PerformanceCounter::new();
     
-    // Simulate post-order traversal with detailed step recording
     let mut result = Vec::new();
     postorder_traverse_with_steps(tree, counter, &mut result, &mut vec![]);
     
@@ -177,7 +172,6 @@ fn postorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter)
 fn levelorder_with_gui(tree: &TreeNode<i32>, counter: &mut GuiPerformanceCounter) -> (Vec<i32>, PerformanceCounter) {
     let perf_counter = PerformanceCounter::new();
     
-    // Simulate level-order traversal with detailed step recording
     let mut result = Vec::new();
     levelorder_traverse_with_steps(tree, counter, &mut result);
     
@@ -197,7 +191,6 @@ fn preorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfo
     
     result.push(node.value);
     
-    // Step 2: Mark current node as completed (GREEN - after being RED)
     gui_counter.add_step(
         get_full_tree(node),
         vec![], 
@@ -206,8 +199,7 @@ fn preorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfo
         "Pre-order Traversal".to_string(),
     );
     
-    // Step 3: Add children to stack context (PURPLE - in context)
-    for child in node.children.iter().rev() { // Reverse for correct stack order
+    for child in node.children.iter().rev() {
         stack_context.push(child.value);
     }
     
@@ -229,7 +221,6 @@ fn preorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfo
 
 fn inorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerformanceCounter, 
                              result: &mut Vec<i32>, stack_context: &mut Vec<i32>) {
-    // Step 1: Add current node to stack (PURPLE - in context, waiting for left subtree)
     stack_context.push(node.value);
     gui_counter.add_step(
         get_full_tree(node),
@@ -239,12 +230,10 @@ fn inorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfor
         "In-order Traversal".to_string(),
     );
     
-    // First, traverse left child
     if !node.children.is_empty() {
         inorder_traverse_with_steps(&node.children[0], gui_counter, result, stack_context);
     }
     
-    // Step 2: Process current node (RED - currently processing)
     stack_context.retain(|&x| x != node.value);
     gui_counter.add_step(
         get_full_tree(node),
@@ -256,7 +245,6 @@ fn inorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfor
     
     result.push(node.value);
     
-    // Step 3: Mark current node as completed (GREEN - after being RED)
     gui_counter.add_step(
         get_full_tree(node),
         vec![], 
@@ -265,7 +253,6 @@ fn inorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfor
         "In-order Traversal".to_string(),
     );
     
-    // Then, traverse right child
     if node.children.len() > 1 {
         inorder_traverse_with_steps(&node.children[1], gui_counter, result, stack_context);
     }
@@ -273,7 +260,6 @@ fn inorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerfor
 
 fn postorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerformanceCounter, 
                                 result: &mut Vec<i32>, stack_context: &mut Vec<i32>) {
-    // Step 1: Add to stack (PURPLE - in context, waiting for children)
     stack_context.push(node.value);
     gui_counter.add_step(
         get_full_tree(node),
@@ -283,12 +269,10 @@ fn postorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerf
         "Post-order Traversal".to_string(),
     );
     
-    // First, traverse all children
     for child in &node.children {
         postorder_traverse_with_steps(child, gui_counter, result, stack_context);
     }
     
-    // Step 2: Process current node after children (RED - currently processing)
     stack_context.retain(|&x| x != node.value);
     gui_counter.add_step(
         get_full_tree(node),
@@ -300,7 +284,6 @@ fn postorder_traverse_with_steps(node: &TreeNode<i32>, gui_counter: &mut GuiPerf
     
     result.push(node.value);
     
-    // Step 3: Mark current node as completed (GREEN - after being RED)
     gui_counter.add_step(
         get_full_tree(node),
         vec![], 
@@ -315,7 +298,6 @@ fn levelorder_traverse_with_steps(tree: &TreeNode<i32>, gui_counter: &mut GuiPer
     let mut queue = VecDeque::new();
     queue.push_back(tree);
     
-    // Initial step - root in queue (PURPLE)
     gui_counter.add_step(
         get_full_tree(tree),
         vec![],
@@ -325,7 +307,6 @@ fn levelorder_traverse_with_steps(tree: &TreeNode<i32>, gui_counter: &mut GuiPer
     );
     
     while let Some(current) = queue.pop_front() {
-        // Step 1: Process current node from queue (RED - currently processing)
         let queue_contents: Vec<i32> = queue.iter().map(|node| node.value).collect();
         gui_counter.add_step(
             get_full_tree(tree),
@@ -337,7 +318,6 @@ fn levelorder_traverse_with_steps(tree: &TreeNode<i32>, gui_counter: &mut GuiPer
         
         result.push(current.value);
         
-        // Step 2: Add children to queue (PURPLE - in context)
         for child in &current.children {
             queue.push_back(child);
         }
@@ -353,7 +333,6 @@ fn levelorder_traverse_with_steps(tree: &TreeNode<i32>, gui_counter: &mut GuiPer
             );
         }
         
-        // Step 3: Mark as completed (GREEN - visited) - ONLY after being processed as RED
         let final_queue_contents: Vec<i32> = queue.iter().map(|node| node.value).collect();
         gui_counter.add_step(
             get_full_tree(tree),
@@ -366,8 +345,5 @@ fn levelorder_traverse_with_steps(tree: &TreeNode<i32>, gui_counter: &mut GuiPer
 }
 
 fn get_full_tree(root: &TreeNode<i32>) -> TreeNode<i32> {
-    // For visualization, we always want to show the complete tree structure
-    // This is a simplified approach - in a real implementation you'd want to maintain
-    // the original tree reference
     root.clone()
 }

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::tree_traversal::{TreeNode, PerformanceCounter};
 
 pub fn traverse<T: Clone>(root: &TreeNode<T>, counter: &mut PerformanceCounter) -> Vec<T> {

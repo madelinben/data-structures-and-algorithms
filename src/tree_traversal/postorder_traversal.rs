@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::tree_traversal::{TreeNode, PerformanceCounter};
 
 pub fn traverse<T: Clone>(root: &TreeNode<T>, counter: &mut PerformanceCounter) -> Vec<T> {
@@ -13,7 +11,6 @@ pub fn traverse_recursive<T: Clone>(root: &TreeNode<T>, counter: &mut Performanc
 }
 
 fn postorder_recursive<T: Clone>(node: &TreeNode<T>, result: &mut Vec<T>, counter: &mut PerformanceCounter) {
-    // Process all children first
     for child in &node.children {
         counter.comparisons += 1;
         postorder_recursive(child, result, counter);

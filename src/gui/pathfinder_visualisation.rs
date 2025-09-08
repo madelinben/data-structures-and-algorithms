@@ -110,7 +110,7 @@ fn create_test_grid(width: usize, height: usize, obstacle_percentage: f64) -> Re
     
 
     if width < 3 || height < 3 {
-        return Ok(grid); // Return empty grid for very small sizes
+        return Ok(grid);
     }
     
     let mut rng = rand::rng();
@@ -122,7 +122,7 @@ fn create_test_grid(width: usize, height: usize, obstacle_percentage: f64) -> Re
     
     let mut obstacles_placed = 0;
     let mut attempts = 0;
-    let max_attempts = total_cells * 3; // Prevent infinite loops
+    let max_attempts = total_cells * 3;
     
     while obstacles_placed < obstacle_count && attempts < max_attempts {
         attempts += 1;
@@ -182,9 +182,9 @@ fn get_eight_directional_neighbors(pos: Position, width: usize, height: usize) -
     
 
     let directions = [
-        (-1, -1), (-1, 0), (-1, 1),  // top-left, top, top-right
-        ( 0, -1),          ( 0, 1),  // left, right  
-        ( 1, -1), ( 1, 0), ( 1, 1)   // bottom-left, bottom, bottom-right
+        (-1, -1), (-1, 0), (-1, 1),
+        ( 0, -1),          ( 0, 1),  
+        ( 1, -1), ( 1, 0), ( 1, 1)
     ];
     
     for (dr, dc) in directions {
@@ -210,7 +210,7 @@ fn is_grid_connected(grid: &Grid) -> bool {
     
     while let Some(current) = queue.pop_front() {
         if current == grid.end {
-            return true; // Found path to end
+            return true;
         }
         
 
@@ -222,7 +222,7 @@ fn is_grid_connected(grid: &Grid) -> bool {
         }
     }
     
-    false // Couldn't reach end from start
+    false
 }
 
 fn create_simple_connected_grid(width: usize, height: usize, obstacle_percentage: f64) -> Result<Grid> {
