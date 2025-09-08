@@ -1,6 +1,6 @@
 # Rust Programming Rules & Best Practices
 
-This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, and algorithm visualisation implementation.
+This document outlines the coding standards and best practices for this Rust project focused on sorting algorithms, search algorithms, pathfinding algorithms, tree traversal algorithms, and algorithm visualisation implementation.
 
 ## Project Structure & Organisation
 
@@ -30,7 +30,8 @@ src/
 │   ├── app_controller.rs # Main application controller
 │   ├── search_controller.rs # Search algorithm coordination
 │   ├── sort_controller.rs # Sort algorithm coordination
-│   └── pathfinder_controller.rs # Pathfinder algorithm coordination
+│   ├── pathfinder_controller.rs # Pathfinder algorithm coordination
+│   └── tree_traversal_controller.rs # Tree traversal algorithm coordination
 ├── gui/                 # GUI visualisation functionality
 │   ├── mod.rs           # Module exports
 │   ├── sorting.rs       # Core sorting visualisation logic
@@ -45,6 +46,9 @@ src/
 ├── pathfinder/          # Pathfinding algorithm implementations
 │   ├── mod.rs           # Pathfinder coordinator and benchmarking
 │   └── *.rs             # Individual pathfinding algorithms
+├── tree_traversal/      # Tree traversal algorithm implementations
+│   ├── mod.rs           # Tree traversal coordinator and benchmarking
+│   └── *.rs             # Individual tree traversal algorithms
 └── utils/               # Utility functions
     └── mod.rs
 ```
@@ -54,6 +58,7 @@ Algorithm implementations are organised in dedicated modules:
 - `sort/` - Contains 13 sorting algorithms (bubble, insertion, selection, merge, quick, heap, shell, tim, tree, bucket, radix, counting, cube)
 - `search/` - Contains 6 search algorithms (linear, binary, hash, interpolation, jump, exponential)
 - `pathfinder/` - Contains 5 pathfinding algorithms (A*, Dijkstra, breadth-first, depth-first, greedy best-first)
+- `tree_traversal/` - Contains 4 tree traversal algorithms (preorder, inorder, postorder, levelorder)
 - Each algorithm module includes performance tracking and proper error handling
 
 ## MVC Architecture
@@ -212,8 +217,9 @@ Error::generic("Unexpected algorithm failure")
 - `prettytable-rs` - Table formatting for benchmarks
 - `rayon` - Parallel processing
 
-### GUI Dependencies (Feature-gated)
-- `gif` - GIF generation for algorithm visualisation (optional)
+### GUI Dependencies
+- `gif` - GIF generation for algorithm visualisation
+- `plotters` - Visualisation and rendering support
 
 ### Development Dependencies
 - `criterion` - Benchmarking
@@ -231,10 +237,11 @@ All GUI and visualisation functionality is centralized in the `gui` module:
 - **renderer.rs**: Frame rendering utilities and static image generation
 
 #### GUI Design Principles
-- **Feature-gated**: All GUI code behind `#[cfg(feature = "gui")]`
+- **Always Available**: GUI functionality is always available without feature gates
 - **Modular**: Separate concerns (step recording, frame rendering, algorithm coordination)
 - **Performance**: Efficient frame generation with consistent scaling and memory usage
 - **User-friendly**: Clear progress indication, error handling, and colour-coded visualisation
+- **GIF-Only**: Only generates animated GIF files to show algorithm operation stages
 - **Consistent**: Standardized colour scheme
   - **Sorting**: purple=context, red=comparison, green=swap, blue=default
   - **Pathfinding**: blue=open, black=blocked, purple=context, red=comparison, green=path
@@ -273,10 +280,21 @@ All GUI and visualisation functionality is centralized in the `gui` module:
 ## Build Configuration
 
 ### Cargo.toml Best Practices
-- Specify exact versions for dependencies
-- Use appropriate feature flags
+- Specify exact versions for dependencies  
+- Always include GUI dependencies (no feature gates needed)
 - Configure release profile for optimisation
 - Include metadata fields (description, license, etc.)
+
+### Simple Build Process
+```bash
+# Development with debug info
+cargo run
+
+# Release build for performance benchmarking
+cargo run --release
+
+# All GUI functionality available by default - no feature flags needed
+```
 
 ### Release Configuration
 ```toml
@@ -287,7 +305,7 @@ codegen-units = 1
 panic = "abort"
 ```
 
-This ensures optimal performance for sorting algorithms, search algorithms, and visualisation rendering.
+This ensures optimal performance for sorting algorithms, search algorithms, pathfinding algorithms, tree traversal algorithms, and visualisation rendering.
 
 ## MVC Implementation Guidelines
 
@@ -313,10 +331,24 @@ This ensures optimal performance for sorting algorithms, search algorithms, and 
 - **Sorting Algorithms**: Implement using consistent `PerformanceCounter` interface
 - **Search Algorithms**: Return tuple of (found: bool, comparisons: usize) 
 - **Pathfinding Algorithms**: Return tuple of (path: Vec<Position>, counter: PerformanceCounter)
+- **Tree Traversal Algorithms**: Return tuple of (path: Vec<NodeValue>, counter: PerformanceCounter)
 - **Performance Tracking**: Count comparisons, swaps, memory allocations, nodes explored accurately
 - **Edge Cases**: Handle empty inputs, single elements, duplicate values, and unreachable goals properly
 - **Visualization**: Use `GuiPerformanceCounter` for step recording in GUI wrapper functions
 - **Grid Operations**: Validate positions, handle obstacles, implement proper neighbor checking
+
+### Standardized Menu Structure
+All algorithm types follow a consistent menu structure:
+1. **Algorithm Information** - Display algorithm complexities, properties, and use cases (learn first!)
+2. **Run Complete Benchmark Suite** - Execute all algorithms with performance benchmarking
+3. **GUI Visualisation** - Generate animated GIF visualisations showing algorithm operation stages
+b. **Back** - Return to main menu
+
+Menu Navigation:
+- Use numbers (1-3) for quick selection
+- Accept algorithm names directly in visualization menus (e.g., "bubble", "merge", "astar")
+- Support "all" or "a" to run all algorithms in visualization menus
+- Support "back" or "b" to return to previous menu
 
 ### User Input Standards
 All algorithm selection inputs throughout the application follow a consistent, simplified structure:
@@ -345,6 +377,12 @@ All algorithm selection inputs throughout the application follow a consistent, s
 - **All**: `a`, `A`, or `all`
 - **Back**: `b`, `B`, or `back` (returns to pathfinder menu)
 
+#### Tree Traversal Algorithm Input
+- **Numbers**: 1-4 corresponding to the algorithm list
+- **Names**: `preorder`, `inorder`, `postorder`, `levelorder`
+- **All**: `a`, `A`, or `all`
+- **Back**: `b`, `B`, or `back` (returns to tree traversal menu)
+
 #### Rejected Input Variations
 Do not accept complex variations or shortcuts:
 - No hyphenated versions: ~~`bubble-sort`~~, ~~`merge-sort`~~
@@ -364,8 +402,8 @@ Do not accept complex variations or shortcuts:
 - Error messages provide context-specific examples
 
 ### GUI Integration Guidelines
-- Feature-gate all GUI dependencies behind `#[cfg(feature = "gui")]`
-- Provide fallbacks for non-GUI builds
+- GUI functionality is always available and no feature gates are needed
 - Separate rendering logic from core algorithm logic
 - Efficient memory usage for visualisation with large datasets
+- Always generate animated GIF files to show algorithm operation stages
 - Implement consistent colour coding across all algorithm visualisations
