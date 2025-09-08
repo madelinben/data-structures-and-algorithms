@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::views::ConsoleView;
-use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice, PathfinderMenuChoice, SortAlgorithm};
+use crate::models::{MainMenuChoice, SearchMenuChoice, SortMenuChoice, PathfinderMenuChoice, TreeTraversalMenuChoice, SortAlgorithm};
 
 pub struct MenuDisplay {
     console: ConsoleView,
@@ -20,18 +20,20 @@ impl MenuDisplay {
             ("1", "Search Algorithms (Linear, Binary, Hash, etc.)"),
             ("2", "Sorting Algorithms (13+ algorithms with benchmarking)"),
             ("3", "Pathfinding Algorithms (A*, Dijkstra, BFS, DFS, etc.)"),
+            ("4", "Tree Traversal Algorithms (Pre-order, In-order, Post-order, Level-order)"),
             ("q", "Quit"),
         ];
         
         self.console.print_menu_options(&options);
         
         loop {
-            let input = self.console.get_input("\nPlease select an option (1-3, or q to quit): ")?;
+            let input = self.console.get_input("\nPlease select an option (1-4, or q to quit): ")?;
             
             match input.as_str() {
                 "1" => return Ok(MainMenuChoice::Search),
                 "2" => return Ok(MainMenuChoice::Sort),
                 "3" => return Ok(MainMenuChoice::Pathfinder),
+                "4" => return Ok(MainMenuChoice::TreeTraversal),
                 "q" | "Q" | "quit" => return Ok(MainMenuChoice::Quit),
                 _ => {
                     self.console.print_error("Invalid option. Please try again.");
@@ -45,23 +47,21 @@ impl MenuDisplay {
         self.console.print_subheader("Search Algorithm Benchmarking");
         
         let options = vec![
-            ("1", "Load Words File"),
-            ("2", "Show Dataset Statistics"),
-            ("3", "Run Search Benchmarks"),
-            ("4", "Analyse Specific Array Type"),
+            ("1", "Algorithm Information"),
+            ("2", "Run Complete Benchmark Suite (All Algorithms)"),
+            ("3", "GUI Visualisation (Generate GIFs)"),
             ("b", "Back to Main Menu"),
         ];
         
         self.console.print_menu_options(&options);
         
         loop {
-            let input = self.console.get_input("\nPlease select an option (1-4, or b to go back): ")?;
+            let input = self.console.get_input("\nPlease select an option (1-3, or b to go back): ")?;
             
             match input.as_str() {
-                "1" => return Ok(SearchMenuChoice::LoadWords),
-                "2" => return Ok(SearchMenuChoice::ShowStats),
-                "3" => return Ok(SearchMenuChoice::RunBenchmarks),
-                "4" => return Ok(SearchMenuChoice::AnalyseArrayType),
+                "1" => return Ok(SearchMenuChoice::AlgorithmInfo),
+                "2" => return Ok(SearchMenuChoice::RunBenchmarks),
+                "3" => return Ok(SearchMenuChoice::GuiVisualisation),
                 "b" | "B" | "back" => return Ok(SearchMenuChoice::Back),
                 _ => {
                     self.console.print_error("Invalid option. Please try again.");
@@ -74,23 +74,21 @@ impl MenuDisplay {
         self.console.print_subheader("Sorting Algorithm Benchmarking");
         
         let options = vec![
-            ("1", "Run Complete Benchmark Suite (13+ algorithms)"),
-            ("2", "Analyse Specific Array Type"),
-            ("3", "GUI Visualisation"),
-            ("4", "Algorithm Information"),
+            ("1", "Algorithm Information"),
+            ("2", "Run Complete Benchmark Suite (All Algorithms)"),
+            ("3", "GUI Visualisation (Generate GIFs)"),
             ("b", "Back to Main Menu"),
         ];
         
         self.console.print_menu_options(&options);
         
         loop {
-            let input = self.console.get_input("\nPlease select an option (1-4, or b to go back): ")?;
+            let input = self.console.get_input("\nPlease select an option (1-3, or b to go back): ")?;
             
             match input.as_str() {
-                "1" => return Ok(SortMenuChoice::RunBenchmarks),
-                "2" => return Ok(SortMenuChoice::AnalyseArrayType),
+                "1" => return Ok(SortMenuChoice::AlgorithmInfo),
+                "2" => return Ok(SortMenuChoice::RunBenchmarks),
                 "3" => return Ok(SortMenuChoice::GuiVisualisation),
-                "4" => return Ok(SortMenuChoice::AlgorithmInfo),
                 "b" | "B" | "back" => return Ok(SortMenuChoice::Back),
                 _ => {
                     self.console.print_error("Invalid option. Please try again.");
@@ -166,27 +164,51 @@ impl MenuDisplay {
         self.console.print_subheader("Pathfinding Algorithm Benchmarking");
         
         let options = vec![
-            ("1", "Run Pathfinding Benchmarks (All Algorithms)"),
-            ("2", "Configure Grid Settings"),
+            ("1", "Algorithm Information"),
+            ("2", "Run Complete Benchmark Suite (All Algorithms)"),
             ("3", "GUI Visualisation (Generate GIFs)"),
-            ("4", "Algorithm Information"),
             ("b", "Back to Main Menu"),
         ];
         
         self.console.print_menu_options(&options);
         
         loop {
-            let input = self.console.get_input("\nPlease select an option (1-4, or b to go back): ")?;
+            let input = self.console.get_input("\nPlease select an option (1-3, or b to go back): ")?;
             
             match input.as_str() {
-                "1" => return Ok(PathfinderMenuChoice::RunBenchmarks),
-                "2" => return Ok(PathfinderMenuChoice::ConfigureGrid),
+                "1" => return Ok(PathfinderMenuChoice::AlgorithmInfo),
+                "2" => return Ok(PathfinderMenuChoice::RunBenchmarks),
                 "3" => return Ok(PathfinderMenuChoice::GuiVisualisation),
-                "4" => return Ok(PathfinderMenuChoice::AlgorithmInfo),
                 "b" | "B" | "back" => return Ok(PathfinderMenuChoice::Back),
                 _ => {
                     self.console.print_error("Invalid option. Please try again.");
-                    self.console.pause_for_input("Press Enter to continue...")?;
+                }
+            }
+        }
+    }
+    
+    pub fn show_tree_traversal_menu(&self) -> Result<TreeTraversalMenuChoice> {
+        self.console.print_subheader("Tree Traversal Algorithm Benchmarking");
+        
+        let options = vec![
+            ("1", "Algorithm Information"),
+            ("2", "Run Complete Benchmark Suite (All Algorithms)"),
+            ("3", "GUI Visualisation (Generate GIFs)"),
+            ("b", "Back to Main Menu"),
+        ];
+        
+        self.console.print_menu_options(&options);
+        
+        loop {
+            let input = self.console.get_input("\nPlease select an option (1-3, or b to go back): ")?;
+            
+            match input.as_str() {
+                "1" => return Ok(TreeTraversalMenuChoice::AlgorithmInfo),
+                "2" => return Ok(TreeTraversalMenuChoice::RunBenchmarks),
+                "3" => return Ok(TreeTraversalMenuChoice::GuiVisualisation),
+                "b" | "B" | "back" => return Ok(TreeTraversalMenuChoice::Back),
+                _ => {
+                    self.console.print_error("Invalid option. Please try again.");
                 }
             }
         }

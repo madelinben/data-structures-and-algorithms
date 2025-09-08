@@ -13,6 +13,7 @@ mod gui;
 mod search;
 mod sort;
 mod pathfinder;
+mod tree_traversal;
 
 #[tokio::main]
 async fn main() -> Result<()> {

@@ -3,22 +3,21 @@ pub enum MainMenuChoice {
     Search,
     Sort,
     Pathfinder,
+    TreeTraversal,
     Quit,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum SearchMenuChoice {
-    LoadWords,
-    ShowStats,
     RunBenchmarks,
-    AnalyseArrayType,
+    GuiVisualisation,
+    AlgorithmInfo,
     Back,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum SortMenuChoice {
     RunBenchmarks,
-    AnalyseArrayType,
     GuiVisualisation,
     AlgorithmInfo,
     Back,
@@ -155,7 +154,6 @@ impl SearchAlgorithm {
 #[derive(Debug, Clone, PartialEq)]
 pub enum PathfinderMenuChoice {
     RunBenchmarks,
-    ConfigureGrid,
     GuiVisualisation,
     AlgorithmInfo,
     Back,
@@ -202,6 +200,56 @@ impl PathfinderAlgorithm {
             Self::BreadthFirst => "Breadth-First Search",
             Self::DepthFirst => "Depth-First Search", 
             Self::GreedyBestFirst => "Greedy Best-First",
+            Self::All => "All Algorithms",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum TreeTraversalMenuChoice {
+    RunBenchmarks,
+    GuiVisualisation,
+    AlgorithmInfo,
+    Back,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum TreeTraversalAlgorithm {
+    Preorder,
+    Inorder,
+    Postorder,
+    Levelorder,
+    All,
+}
+
+impl TreeTraversalAlgorithm {
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s.to_lowercase().as_str() {
+            "1" | "preorder" => Some(Self::Preorder),
+            "2" | "inorder" => Some(Self::Inorder),
+            "3" | "postorder" => Some(Self::Postorder),
+            "4" | "levelorder" => Some(Self::Levelorder),
+            "a" | "all" => Some(Self::All),
+            _ => None,
+        }
+    }
+    
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Preorder => "preorder",
+            Self::Inorder => "inorder",
+            Self::Postorder => "postorder",
+            Self::Levelorder => "levelorder",
+            Self::All => "all",
+        }
+    }
+    
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            Self::Preorder => "Pre-order (DFS)",
+            Self::Inorder => "In-order (DFS)",
+            Self::Postorder => "Post-order (DFS)",
+            Self::Levelorder => "Level-order (BFS)",
             Self::All => "All Algorithms",
         }
     }
