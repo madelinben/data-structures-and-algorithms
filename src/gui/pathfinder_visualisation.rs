@@ -49,20 +49,7 @@ pub fn run_pathfinder_visualisation(algorithm: &str, grid_size: (usize, usize)) 
 pub fn run_all_pathfinder_visualisations(grid_size: (usize, usize)) -> Result<()> {
     println!("🎨 Running GUI visualisations for all 5 pathfinding algorithms!");
     
-    println!("Choose output format:");
-    println!("1. Static PNG (fast)");  
-    println!("2. Animated GIF (slower but shows process)");
-    print!("Enter choice (1-2): ");
-    
-    let mut choice = String::new();
-    std::io::stdin().read_line(&mut choice).ok();
-    let use_gif = choice.trim() == "2";
-    
-    if use_gif {
-        println!("📺 Will generate animated GIFs for all algorithms...");
-    } else {
-        println!("📷 Will generate static visualisations for all algorithms...");
-    }
+    println!("📺 Generating animated GIFs for all algorithms...");
     
     let algorithms = vec![
         "A*", "Dijkstra", "Breadth-First Search", 
@@ -81,27 +68,27 @@ pub fn run_all_pathfinder_visualisations(grid_size: (usize, usize)) -> Result<()
             "A*" => {
                 visualiser.visualise_algorithm_with_choice("A*", grid, |grid, counter| {
                     astar_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Dijkstra" => {
                 visualiser.visualise_algorithm_with_choice("Dijkstra", grid, |grid, counter| {
                     dijkstra_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Breadth-First Search" => {
                 visualiser.visualise_algorithm_with_choice("Breadth-First Search", grid, |grid, counter| {
                     breadth_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Depth-First Search" => {
                 visualiser.visualise_algorithm_with_choice("Depth-First Search", grid, |grid, counter| {
                     depth_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Greedy Best-First" => {
                 visualiser.visualise_algorithm_with_choice("Greedy Best-First", grid, |grid, counter| {
                     greedy_best_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             _ => {
                 eprintln!("❌ Unknown algorithm: {}", algorithm);

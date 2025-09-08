@@ -4,7 +4,6 @@ use std::collections::{VecDeque, HashSet};
 use std::fs::File;
 use std::io::{self, Write};
 
-#[cfg(feature = "gui")]
 use gif::{Frame, Encoder, Repeat};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -210,18 +209,8 @@ impl PathfinderVisualiser {
             }
         }
         
-        println!("Choose output format:");
-        println!("1. Static PNG (fast)");
-        println!("2. Animated GIF (slower but shows process)");
-        print!("Enter choice (1-2): ");
-        
-        let mut choice = String::new();
-        std::io::stdin().read_line(&mut choice).ok();
-        
-        match choice.trim() {
-            "2" => self.render_animated_gif(),
-            _ => self.render_static_output(),
-        }
+        println!("🎬 Generating animated GIF visualization...");
+        self.render_animated_gif()
     }
 
     pub fn visualise_algorithm_with_choice<F>(&mut self, algorithm_name: &str, grid: Grid, pathfind_fn: F, use_gif: bool) -> Result<()>
@@ -277,11 +266,8 @@ impl PathfinderVisualiser {
             }
         }
         
-        if use_gif {
-            self.render_animated_gif()
-        } else {
-            self.render_static_output()
-        }
+        // Always generate animated GIF
+        self.render_animated_gif()
     }
 
     fn render_static_output(&self) -> Result<()> {
@@ -301,15 +287,14 @@ impl PathfinderVisualiser {
         Ok(())
     }
 
-    #[cfg(feature = "gui")]
     fn render_animated_gif(&self) -> Result<()> {
         let algorithm_name = self.steps.front()
             .map(|s| s.algorithm_name.replace(" ", "_").replace("*", "star").to_lowercase())
             .unwrap_or_else(|| "pathfinder".to_string());
         
-        let filename = format!("assets/gif/pathfinding_animation_{}.gif", algorithm_name);
+        let filename = format!("assets/gif/pathfinding/{}.gif", algorithm_name);
         
-        std::fs::create_dir_all("assets/gif").map_err(|e| Error::Generic(format!("Failed to create directory: {}", e)))?;
+        std::fs::create_dir_all("assets/gif/pathfinding").map_err(|e| Error::Generic(format!("Failed to create directory: {}", e)))?;
         if std::path::Path::new(&filename).exists() {
             std::fs::remove_file(&filename).map_err(|e| Error::Generic(format!("Failed to remove existing file: {}", e)))?;
         }
@@ -339,10 +324,6 @@ impl PathfinderVisualiser {
         Ok(())
     }
 
-    #[cfg(not(feature = "gui"))]
-    fn render_animated_gif(&self) -> Result<()> {
-        Err(Error::Generic("GIF rendering requires --features gui".to_string()))
-    }
 
     fn create_frame(&self, step: &PathfinderStep, width: u16, height: u16) -> Result<Vec<u8>> {
         let mut buffer = vec![255u8; (width as usize) * (height as usize) * 3];

@@ -37,7 +37,7 @@ impl InputHandler {
         
         config.array_size = self.console.get_number("Enter array size", Some(1000))?;
         config.iterations = self.console.get_number("Enter iterations", Some(10))?;
-        config.gui_enabled = self.console.confirm("Enable GUI visualisation?", false)?;
+        config.gui_enabled = false;
         
         self.validate_sort_config(&config)?;
         Ok(config)
