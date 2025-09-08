@@ -23,26 +23,22 @@ impl SortController {
     
     pub async fn run_interactive(&mut self) -> Result<()> {
         loop {
-            match self.menu_display.show_sort_menu()? {
+            let choice = self.menu_display.show_sort_menu()?;
+            match choice {
+                SortMenuChoice::AlgorithmInfo => {
+                    self.menu_display.show_algorithm_info();
+                }
                 SortMenuChoice::RunBenchmarks => {
                     self.handle_run_benchmarks().await?;
-                }
-                SortMenuChoice::AnalyseArrayType => {
-                    self.handle_analyse_array_type().await?;
+                    self.console.pause_for_input("Press Enter to continue...")?;
                 }
                 SortMenuChoice::GuiVisualisation => {
                     self.handle_gui_visualisation().await?;
-                }
-                SortMenuChoice::AlgorithmInfo => {
-                    self.menu_display.show_algorithm_info();
+                    self.console.pause_for_input("Press Enter to continue...")?;
                 }
                 SortMenuChoice::Back => {
                     break;
                 }
-            }
-            
-            if !matches!(self.menu_display.show_sort_menu(), Ok(SortMenuChoice::AlgorithmInfo)) {
-                self.console.pause_for_input("Press Enter to continue...")?;
             }
         }
         
@@ -75,27 +71,6 @@ impl SortController {
             }
             Err(e) => {
                 self.console.print_error(&format!("Benchmark failed: {}", e));
-                return Err(e);
-            }
-        }
-        
-        Ok(())
-    }
-    
-    async fn handle_analyse_array_type(&mut self) -> Result<()> {
-        self.console.print_subheader("Analyse Specific Array Type");
-        
-        let array_type = self.input_handler.get_array_type_for_analysis()?;
-        let size = self.console.get_number("Enter array size", Some(1000))?;
-        
-        self.console.print_info(&format!("Analysing performance on {} array (size: {})", array_type, size));
-        
-        match self.coordinator.analyse_array_type(&array_type, size) {
-            Ok(_) => {
-                self.console.print_success("Analysis completed!");
-            }
-            Err(e) => {
-                self.console.print_error(&format!("Analysis failed: {}", e));
                 return Err(e);
             }
         }
@@ -139,35 +114,28 @@ impl SortController {
     }
     
     async fn handle_gui_mode(&mut self, size: usize) -> Result<()> {
-        loop {
-            match self.menu_display.show_gui_algorithm_menu() {
-                Ok(choice) => {
-                    if choice == "back" {
-                        break;
-                    }
-                    
-                    if choice == "all" {
-                        if let Err(e) = run_all_gui_visualisations(size) {
-                            self.console.print_error(&format!("GUI Error: {}", e));
-                        } else {
-                            self.console.print_success("All GUI visualisations completed!");
-                        }
+        match self.menu_display.show_gui_algorithm_menu() {
+            Ok(choice) => {
+                if choice == "back" {
+                    return Ok(());
+                }
+                
+                if choice == "all" {
+                    if let Err(e) = run_all_gui_visualisations(size) {
+                        self.console.print_error(&format!("GUI Error: {}", e));
                     } else {
-                        if let Err(e) = run_gui_visualisation(&choice, size) {
-                            self.console.print_error(&format!("GUI Error: {}", e));
-                        } else {
-                            self.console.print_success("GUI visualisation completed!");
-                        }
+                        self.console.print_success("All GUI visualisations completed!");
                     }
-                    
-                    if choice != "all" && !self.console.confirm("Visualise another algorithm?", true)? {
-                        break;
+                } else {
+                    if let Err(e) = run_gui_visualisation(&choice, size) {
+                        self.console.print_error(&format!("GUI Error: {}", e));
+                    } else {
+                        self.console.print_success("GUI visualisation completed!");
                     }
                 }
-                Err(e) => {
-                    self.console.print_error(&format!("Menu Error: {}", e));
-                    break;
-                }
+            }
+            Err(e) => {
+                self.console.print_error(&format!("Menu Error: {}", e));
             }
         }
         

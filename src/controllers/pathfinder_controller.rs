@@ -22,18 +22,18 @@ impl PathfinderController {
     
     pub async fn run_interactive(&mut self) -> Result<()> {
         loop {
-            match self.menu_display.show_pathfinder_menu()? {
+            let choice = self.menu_display.show_pathfinder_menu()?;
+            match choice {
+                PathfinderMenuChoice::AlgorithmInfo => {
+                    self.handle_algorithm_info().await?;
+                }
                 PathfinderMenuChoice::RunBenchmarks => {
                     self.handle_run_benchmarks().await?;
-                }
-                PathfinderMenuChoice::ConfigureGrid => {
-                    self.handle_configure_grid().await?;
+                    self.console.pause_for_input("Press Enter to continue...")?;
                 }
                 PathfinderMenuChoice::GuiVisualisation => {
                     self.handle_gui_visualisation().await?;
-                }
-                PathfinderMenuChoice::AlgorithmInfo => {
-                    self.handle_algorithm_info().await?;
+                    self.console.pause_for_input("Press Enter to continue...")?;
                 }
                 PathfinderMenuChoice::Back => {
                     break;
@@ -55,89 +55,49 @@ impl PathfinderController {
         let _metrics = self.coordinator.run_benchmarks(grid_size, iterations)?;
         
         println!("✅ Benchmarks completed!");
-        self.console.wait_for_enter("Press Enter to continue...");
         Ok(())
     }
 
-    async fn handle_configure_grid(&mut self) -> Result<()> {
-        println!("🎛️  Grid Configuration");
-        println!("===================");
-        println!("Current configuration:");
-        println!("- Grid size: 20x20");
-        println!("- Obstacle percentage: 30%");
-        println!();
-        
-        let width = self.input_handler.get_positive_number("Grid width", 5, 50)?;
-        let height = self.input_handler.get_positive_number("Grid height", 5, 50)?;
-        let obstacle_percentage = self.get_obstacle_percentage_from_user()?;
-        
-
-        self.coordinator.generate_test_grids((width, height), obstacle_percentage)?;
-        
-        println!("✅ Grid configuration updated!");
-        println!("New settings:");
-        println!("- Grid size: {}x{}", width, height);
-        println!("- Obstacle percentage: {:.0}%", obstacle_percentage * 100.0);
-        
-        self.console.wait_for_enter("Press Enter to continue...");
-        Ok(())
-    }
 
     async fn handle_gui_visualisation(&mut self) -> Result<()> {
-        println!("🎨 Pathfinding Visualisation");
-        println!("===========================");
+        self.console.print_subheader("GUI Visualisation");
         
-        #[cfg(feature = "gui")]
-        {
-            loop {
-                            println!("Choose algorithm to visualise:");
-            println!("1. A*");
-            println!("2. Dijkstra");
-            println!("3. Breadth-First Search");
-            println!("4. Depth-First Search");
-            println!("5. Greedy Best-First");
-            println!("a. All Algorithms");
-            println!("b. Back");
-            println!("\n💡 You can also type algorithm names like 'astar', 'dijkstra', 'bfs', 'dfs', etc.");
+        println!("Choose algorithm to visualise:");
+        println!("1. A*");
+        println!("2. Dijkstra");
+        println!("3. Breadth-First Search");
+        println!("4. Depth-First Search");
+        println!("5. Greedy Best-First");
+        println!("a. All Algorithms");
+        println!("b. Back");
+        println!("\n💡 You can also type algorithm names like 'astar', 'dijkstra', 'bfs', 'dfs', etc.");
+        
+        let choice = self.input_handler.get_string("Enter choice (number or name)")?;
             
-            let choice = self.input_handler.get_string("Enter choice (number or name)")?;
-                
-                if choice.to_lowercase() == "b" || choice.to_lowercase() == "back" {
-                    break;
-                }
-                
-                let grid_size = self.get_grid_size_from_user()?;
-                
-                match PathfinderAlgorithm::from_str(&choice) {
-                    Some(PathfinderAlgorithm::All) => {
-                        use crate::gui::pathfinder_visualisation::run_all_pathfinder_visualisations;
-                        println!("🎬 Generating visualisations for all pathfinding algorithms...");
-                        run_all_pathfinder_visualisations(grid_size)?;
-                    }
-                    Some(algorithm) => {
-                        use crate::gui::pathfinder_visualisation::run_pathfinder_visualisation;
-                        println!("🎬 Generating visualisation for {}...", algorithm.display_name());
-                        run_pathfinder_visualisation(algorithm.as_str(), grid_size)?;
-                    }
-                    None => {
-                        println!("❌ Invalid choice. Please enter 1-5, a, or q.");
-                        continue;
-                    }
-                }
-                
-                if !self.console.confirm("Visualise another algorithm?", true)? {
-                    break;
-                }
+        if choice.to_lowercase() == "b" || choice.to_lowercase() == "back" {
+            return Ok(());
+        }
+        
+        let grid_size = self.get_grid_size_from_user()?;
+        
+        match PathfinderAlgorithm::from_str(&choice) {
+            Some(PathfinderAlgorithm::All) => {
+                use crate::gui::pathfinder_visualisation::run_all_pathfinder_visualisations;
+                println!("🎬 Generating visualisations for all pathfinding algorithms...");
+                run_all_pathfinder_visualisations(grid_size)?;
+                self.console.print_success("All GUI visualisations completed!");
+            }
+            Some(algorithm) => {
+                use crate::gui::pathfinder_visualisation::run_pathfinder_visualisation;
+                println!("🎬 Generating visualisation for {}...", algorithm.display_name());
+                run_pathfinder_visualisation(algorithm.as_str(), grid_size)?;
+                self.console.print_success("GUI visualisation completed!");
+            }
+            None => {
+                self.console.print_error("❌ Invalid choice. Please enter 1-5, 'a', or algorithm names like 'astar', 'dijkstra', etc.");
             }
         }
         
-        #[cfg(not(feature = "gui"))]
-        {
-            println!("❌ GUI features not enabled");
-            println!("Build with --features gui to enable visualisation");
-        }
-        
-        self.console.wait_for_enter("Press Enter to continue...");
         Ok(())
     }
 
