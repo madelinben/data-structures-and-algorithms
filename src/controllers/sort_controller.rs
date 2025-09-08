@@ -45,14 +45,10 @@ impl SortController {
         Ok(())
     }
     
-    pub async fn run_cli(&mut self, size: usize, iterations: usize, gui_enabled: bool) -> Result<()> {
+    pub async fn run_cli(&mut self, size: usize, iterations: usize) -> Result<()> {
         self.console.print_header("Sorting Algorithm Benchmarking System");
         
-        if gui_enabled {
-            self.handle_gui_mode(size).await?;
-        } else {
-            self.coordinator.run_benchmarks(size, iterations)?;
-        }
+        self.coordinator.run_benchmarks(size, iterations)?;
         
         Ok(())
     }

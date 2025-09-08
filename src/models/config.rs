@@ -21,7 +21,6 @@ impl Default for SearchConfig {
 pub struct SortConfig {
     pub array_size: usize,
     pub iterations: usize,
-    pub gui_enabled: bool,
 }
 
 impl Default for SortConfig {
@@ -29,7 +28,6 @@ impl Default for SortConfig {
         Self {
             array_size: 1000,
             iterations: 10,
-            gui_enabled: false,
         }
     }
 }
@@ -40,7 +38,6 @@ pub struct PathfinderConfig {
     pub grid_height: usize,
     pub obstacle_percentage: f64,
     pub iterations: usize,
-    pub gui_enabled: bool,
 }
 
 impl Default for PathfinderConfig {
@@ -50,7 +47,6 @@ impl Default for PathfinderConfig {
             grid_height: 20,
             obstacle_percentage: 0.3,
             iterations: 10,
-            gui_enabled: false,
         }
     }
 }

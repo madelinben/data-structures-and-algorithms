@@ -98,9 +98,7 @@ impl AppController {
             .parse()
             .map_err(|_| Error::validation("Invalid iterations number"))?;
         
-        let gui_enabled = matches.get_flag("gui");
-        
-        self.sort_controller.run_cli(size, iterations, gui_enabled).await
+        self.sort_controller.run_cli(size, iterations).await
     }
     
     async fn handle_pathfinder_command(&mut self, matches: &ArgMatches) -> Result<()> {
@@ -125,14 +123,11 @@ impl AppController {
             .map_err(|_| Error::validation("Invalid obstacle percentage"))?
             / 100.0;
         
-        let gui_enabled = matches.get_flag("gui");
-        
         let config = crate::models::PathfinderConfig {
             grid_width: width,
             grid_height: height,
             obstacle_percentage,
             iterations,
-            gui_enabled,
         };
         
         use crate::models::PathfinderAlgorithm;
