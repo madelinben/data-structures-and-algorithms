@@ -37,7 +37,6 @@ impl InputHandler {
         
         config.array_size = self.console.get_number("Enter array size", Some(1000))?;
         config.iterations = self.console.get_number("Enter iterations", Some(10))?;
-        config.gui_enabled = self.console.confirm("Enable GUI visualisation?", false)?;
         
         self.validate_sort_config(&config)?;
         Ok(config)
@@ -192,10 +191,6 @@ impl InputHandler {
         
         if config.iterations == 0 {
             return Err(Error::validation("Iterations must be greater than 0"));
-        }
-        
-        if config.gui_enabled && config.array_size > 100 {
-            self.console.print_warning("Large array sizes may result in slow GUI rendering");
         }
         
         Ok(())

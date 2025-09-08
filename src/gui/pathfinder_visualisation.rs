@@ -49,20 +49,7 @@ pub fn run_pathfinder_visualisation(algorithm: &str, grid_size: (usize, usize)) 
 pub fn run_all_pathfinder_visualisations(grid_size: (usize, usize)) -> Result<()> {
     println!("🎨 Running GUI visualisations for all 5 pathfinding algorithms!");
     
-    println!("Choose output format:");
-    println!("1. Static PNG (fast)");  
-    println!("2. Animated GIF (slower but shows process)");
-    print!("Enter choice (1-2): ");
-    
-    let mut choice = String::new();
-    std::io::stdin().read_line(&mut choice).ok();
-    let use_gif = choice.trim() == "2";
-    
-    if use_gif {
-        println!("📺 Will generate animated GIFs for all algorithms...");
-    } else {
-        println!("📷 Will generate static visualisations for all algorithms...");
-    }
+    println!("📺 Generating animated GIFs for all algorithms...");
     
     let algorithms = vec![
         "A*", "Dijkstra", "Breadth-First Search", 
@@ -81,27 +68,27 @@ pub fn run_all_pathfinder_visualisations(grid_size: (usize, usize)) -> Result<()
             "A*" => {
                 visualiser.visualise_algorithm_with_choice("A*", grid, |grid, counter| {
                     astar_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Dijkstra" => {
                 visualiser.visualise_algorithm_with_choice("Dijkstra", grid, |grid, counter| {
                     dijkstra_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Breadth-First Search" => {
                 visualiser.visualise_algorithm_with_choice("Breadth-First Search", grid, |grid, counter| {
                     breadth_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Depth-First Search" => {
                 visualiser.visualise_algorithm_with_choice("Depth-First Search", grid, |grid, counter| {
                     depth_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             "Greedy Best-First" => {
                 visualiser.visualise_algorithm_with_choice("Greedy Best-First", grid, |grid, counter| {
                     greedy_best_first_with_gui(grid, counter)
-                }, use_gif)?;
+                }, true)?;
             },
             _ => {
                 eprintln!("❌ Unknown algorithm: {}", algorithm);
@@ -123,7 +110,7 @@ fn create_test_grid(width: usize, height: usize, obstacle_percentage: f64) -> Re
     
 
     if width < 3 || height < 3 {
-        return Ok(grid); // Return empty grid for very small sizes
+        return Ok(grid);
     }
     
     let mut rng = rand::rng();
@@ -135,7 +122,7 @@ fn create_test_grid(width: usize, height: usize, obstacle_percentage: f64) -> Re
     
     let mut obstacles_placed = 0;
     let mut attempts = 0;
-    let max_attempts = total_cells * 3; // Prevent infinite loops
+    let max_attempts = total_cells * 3;
     
     while obstacles_placed < obstacle_count && attempts < max_attempts {
         attempts += 1;
@@ -195,9 +182,9 @@ fn get_eight_directional_neighbors(pos: Position, width: usize, height: usize) -
     
 
     let directions = [
-        (-1, -1), (-1, 0), (-1, 1),  // top-left, top, top-right
-        ( 0, -1),          ( 0, 1),  // left, right  
-        ( 1, -1), ( 1, 0), ( 1, 1)   // bottom-left, bottom, bottom-right
+        (-1, -1), (-1, 0), (-1, 1),
+        ( 0, -1),          ( 0, 1),  
+        ( 1, -1), ( 1, 0), ( 1, 1)
     ];
     
     for (dr, dc) in directions {
@@ -223,7 +210,7 @@ fn is_grid_connected(grid: &Grid) -> bool {
     
     while let Some(current) = queue.pop_front() {
         if current == grid.end {
-            return true; // Found path to end
+            return true;
         }
         
 
@@ -235,7 +222,7 @@ fn is_grid_connected(grid: &Grid) -> bool {
         }
     }
     
-    false // Couldn't reach end from start
+    false
 }
 
 fn create_simple_connected_grid(width: usize, height: usize, obstacle_percentage: f64) -> Result<Grid> {

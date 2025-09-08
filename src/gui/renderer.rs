@@ -52,7 +52,6 @@ impl FrameRenderer {
     }
 }
 
-#[cfg(feature = "gui")]
 pub mod gif_renderer {
     use super::*;
     use gif::{Frame, Encoder, Repeat};

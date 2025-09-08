@@ -95,21 +95,7 @@ pub fn run_all_gui_visualisations(array_size: usize) -> Result<()> {
     println!("🎨 Running GUI visualisations for all 13 sorting algorithms!");
     println!("Array size: {}", array_size);
     
-    println!("Choose output format for all visualisations:");
-    println!("1. Static PNG (fast)");
-    println!("2. Animated GIF (slower but shows process)");
-    print!("Enter choice (1-2): ");
-    io::stdout().flush().unwrap();
-    
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    let use_gif = input.trim() == "2";
-    
-    if use_gif {
-        println!("📺 Will generate animated GIFs for all algorithms...");
-    } else {
-        println!("🖼️ Will generate static PNGs for all algorithms...");
-    }
+    println!("📺 Generating animated GIFs for all algorithms...");
     
     println!("{}", "=".repeat(80));
     
@@ -131,67 +117,67 @@ pub fn run_all_gui_visualisations(array_size: usize) -> Result<()> {
             "Bubble Sort" => {
                 visualiser.visualise_algorithm_with_choice("Bubble Sort", test_array, |arr, counter| {
                     bubble_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Insertion Sort" => {
                 visualiser.visualise_algorithm_with_choice("Insertion Sort", test_array, |arr, counter| {
                     insertion_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Selection Sort" => {
                 visualiser.visualise_algorithm_with_choice("Selection Sort", test_array, |arr, counter| {
                     selection_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Merge Sort" => {
                 visualiser.visualise_algorithm_with_choice("Merge Sort", test_array, |arr, counter| {
                     merge_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Quick Sort" => {
                 visualiser.visualise_algorithm_with_choice("Quick Sort", test_array, |arr, counter| {
                     quick_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Heap Sort" => {
                 visualiser.visualise_algorithm_with_choice("Heap Sort", test_array, |arr, counter| {
                     heap_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Shell Sort" => {
                 visualiser.visualise_algorithm_with_choice("Shell Sort", test_array, |arr, counter| {
                     shell_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Tim Sort" => {
                 visualiser.visualise_algorithm_with_choice("Tim Sort", test_array, |arr, counter| {
                     tim_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Tree Sort" => {
                 visualiser.visualise_algorithm_with_choice("Tree Sort", test_array, |arr, counter| {
                     tree_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Bucket Sort" => {
                 visualiser.visualise_algorithm_with_choice("Bucket Sort", test_array, |arr, counter| {
                     bucket_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Radix Sort" => {
                 visualiser.visualise_algorithm_with_choice("Radix Sort", test_array, |arr, counter| {
                     radix_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Counting Sort" => {
                 visualiser.visualise_algorithm_with_choice("Counting Sort", test_array, |arr, counter| {
                     counting_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             "Cube Sort" => {
                 visualiser.visualise_algorithm_with_choice("Cube Sort", test_array, |arr, counter| {
                     cube_sort_with_gui(arr, counter);
-                }, use_gif)?;
+                }, true)?;
             },
             _ => {
                 eprintln!("❌ Unknown algorithm: {}", algorithm);

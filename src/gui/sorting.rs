@@ -5,7 +5,6 @@ use std::fs::File;
 use rand::{rng, Rng};
 use std::io::{self, Write};
 
-#[cfg(feature = "gui")]
 use gif::{Frame, Encoder, Repeat};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -107,18 +106,8 @@ impl SortVisualiser {
             algorithm_name.to_string(),
         );
         
-        println!("Choose output format:");
-        println!("1. Static PNG (fast)");
-        println!("2. Animated GIF (slower but shows process)");
-        print!("Enter choice (1-2): ");
-        
-        let mut choice = String::new();
-        std::io::stdin().read_line(&mut choice).ok();
-        
-        match choice.trim() {
-            "2" => self.render_animated_gif(),
-            _ => self.render_animation(),
-        }
+        println!("🎬 Generating animated GIF visualization...");
+        self.render_animated_gif()
     }
 
     pub fn visualise_algorithm_with_choice<F>(&mut self, algorithm_name: &str, mut array: Vec<i32>, sort_fn: F, use_gif: bool) -> Result<()>
@@ -152,41 +141,18 @@ impl SortVisualiser {
             algorithm_name.to_string(),
         );
         
-        if use_gif {
-            self.render_animated_gif()
-        } else {
-            self.render_animation()
-        }
+        self.render_animated_gif()
     }
 
-    fn render_animation(&self) -> Result<()> {
-        let filename = format!("assets/png/sorting_visualisation_{}.png", 
-            self.steps.front().map(|s| s.algorithm_name.replace(" ", "_").to_lowercase())
-                .unwrap_or_else(|| "sort".to_string())
-        );
-        
-        std::fs::create_dir_all("assets/png").map_err(|e| Error::Generic(format!("Failed to create directory: {}", e)))?;
-        if std::path::Path::new(&filename).exists() {
-            std::fs::remove_file(&filename).map_err(|e| Error::Generic(format!("Failed to remove existing file: {}", e)))?;
-        }
-        
-        println!("📊 Generating visualisation...");
-        println!("Output file: {}", filename);
-        println!("Total steps: {}", self.steps.len());
-        
-        println!("✅ Static visualisation completed: {}", filename);
-        Ok(())
-    }
 
-    #[cfg(feature = "gui")]
     fn render_animated_gif(&self) -> Result<()> {
         let algorithm_name = self.steps.front()
             .map(|s| s.algorithm_name.replace(" ", "_").to_lowercase())
             .unwrap_or_else(|| "sort".to_string());
         
-        let filename = format!("assets/gif/sorting_animation_{}.gif", algorithm_name);
+        let filename = format!("assets/gif/sort/{}.gif", algorithm_name);
         
-        std::fs::create_dir_all("assets/gif").map_err(|e| Error::Generic(format!("Failed to create directory: {}", e)))?;
+        std::fs::create_dir_all("assets/gif/sort").map_err(|e| Error::Generic(format!("Failed to create directory: {}", e)))?;
         if std::path::Path::new(&filename).exists() {
             std::fs::remove_file(&filename).map_err(|e| Error::Generic(format!("Failed to remove existing file: {}", e)))?;
         }
@@ -216,10 +182,6 @@ impl SortVisualiser {
         Ok(())
     }
 
-    #[cfg(not(feature = "gui"))]
-    fn render_animated_gif(&self) -> Result<()> {
-        Err(Error::Generic("GIF rendering requires --features gui".to_string()))
-    }
 
     fn create_frame(&self, step: &SortStep, width: u16, height: u16) -> Result<Vec<u8>> {
         let mut buffer = vec![255u8; (width as usize) * (height as usize) * 3];
@@ -241,18 +203,18 @@ impl SortVisualiser {
             
             let (r, g, b) = if step.highlighted_indices.contains(&i) {
                 match step.step_type {
-                    StepType::Comparison => (255, 50, 50),    // Red for compared indexes
-                    StepType::Swap => (50, 255, 50),          // Green for swapped indexes
-                    StepType::Normal => (50, 100, 255),       // Blue fallback
+                    StepType::Comparison => (255, 50, 50),
+                    StepType::Swap => (50, 255, 50),
+                    StepType::Normal => (50, 100, 255),
                 }
             } else if let Some((start, end)) = step.context_range {
                 if i >= start && i < end {
-                    (180, 100, 255)                           // Purple for algorithm context
+                    (180, 100, 255)
                 } else {
-                    (50, 100, 255)                            // Blue fallback
+                    (50, 100, 255)
                 }
             } else {
-                (50, 100, 255)                                // Blue fallback
+                (50, 100, 255)
             };
             
             for y in y_start..y_end {
